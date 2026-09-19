@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pride Flag Collector: Real vs Impostor</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arcade: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#080c1a',
+                        cardBg: 'rgba(15, 23, 42, 0.88)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #060913;
+            color: #f8fafc;
+            user-select: none;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FF007F, #FF7043, #FFEA00, #00E676, #00D2FF, #8A2BE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .arcade-btn {
+            transition: all 0.15s ease-in-out;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+        .arcade-btn:active {
+            transform: scale(0.95);
+        }
+
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 20;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 0, 127, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(0, 210, 255, 0.7); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #05070f; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-100 antialiased select-none">
+
+    <header class="z-30 glass-panel border-b border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between shrink-0">
+        <!-- Brand & Title -->
+        <div class="flex items-center gap-3 cursor-pointer" onclick="returnToMenu()">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-cyan-400 flex items-center justify-center text-white text-lg font-black shadow-lg shadow-purple-500/30">
+                <i class="fa-solid fa-flag"></i>
+            </div>
+            <div>
+                <h1 class="font-arcade font-bold text-base sm:text-lg tracking-wider gradient-text">PRIDE FLAG COLLECTOR</h1>
+                <p class="text-[10px] sm:text-xs text-slate-400 font-semibold tracking-wide">Real Pride vs Decoy Flags</p>
+            </div>
+        </div>
+
+        <!-- Controls & Sound Action -->
+        <div class="flex items-center gap-2 sm:gap-3">
+            <button id="customizerBtnHeader" onclick="openCustomizerModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5" title="Customize Paddle Skin">
+                <i class="fa-solid fa-palette text-pink-400"></i>
+                <span class="hidden sm:inline">Paddle Skin</span>
+            </button>
+
+            <button id="codexBtnHeader" onclick="openCodexModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-book-open text-purple-400"></i>
+                <span class="hidden sm:inline">Flag Codex</span>
+            </button>
+            
+            <button id="audioToggleBtn" onclick="toggleAudio()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-center transition" title="Toggle Sound">
+                <i id="audioIcon" class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+
+            <!-- Quick Safe Exit -->
+            <button onclick="triggerQuickExit()" title="Quick Safe Exit" class="px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-600/50 text-rose-200 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-person-running"></i>
+                <span class="hidden sm:inline">Quick Exit</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 relative flex flex-col items-center justify-center p-2 sm:p-4 overflow-hidden scanlines">
+        
+        <div id="gameContainer" class="relative w-full max-w-4xl h-full max-h-[640px] rounded-2xl overflow-hidden glass-panel border-2 border-slate-700/80 shadow-2xl flex flex-col">
+            
+            <!-- In-Game HUD Overlay -->
+            <div id="inGameHud" class="absolute top-0 left-0 right-0 z-20 p-3 flex items-center justify-between pointer-events-none bg-gradient-to-b from-slate-950/90 to-transparent">
+                <!-- Score & Hearts -->
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 bg-slate-900/90 px-3 py-1 rounded-lg border border-cyan-500/30 text-cyan-300 font-arcade font-bold text-xs sm:text-sm">
+                        <span>SCORE:</span>
+                        <span id="hudScore" class="text-cyan-400 font-extrabold text-sm sm:text-base">0000</span>
+                    </div>
+                    <div id="hudHearts" class="flex items-center gap-1 text-xs text-rose-400 font-arcade font-bold bg-slate-900/80 px-2.5 py-1 rounded-lg border border-slate-800">
+                        <i class="fa-solid fa-heart text-rose-500"></i>
+                        <i class="fa-solid fa-heart text-rose-500"></i>
+                        <i class="fa-solid fa-heart text-rose-500"></i>
+                    </div>
+                </div>
+
+                <!-- Notification Alert Banner -->
+                <div id="hudNotice" class="hidden px-3 py-1 rounded-full bg-slate-900/90 border border-purple-500/50 text-purple-200 font-arcade text-xs font-bold animate-pulse flex items-center gap-1.5">
+                    <i id="noticeIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <span id="noticeText">+100 Progress Pride Flag!</span>
+                </div>
+
+                <!-- Streak & Active Power-up -->
+                <div class="flex items-center gap-2">
+                    <div id="hudShieldBadge" class="hidden px-2.5 py-1 rounded-lg bg-indigo-900/90 border border-indigo-400 text-indigo-200 font-arcade text-xs font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-shield-halved text-indigo-300"></i> SHIELD
+                    </div>
+                    <div class="flex items-center gap-1 bg-slate-900/90 px-2.5 py-1 rounded-lg border border-amber-500/30 text-amber-300 font-arcade font-bold text-xs">
+                        <i class="fa-solid fa-fire text-amber-400"></i>
+                        <span id="hudStreak">STREAK: 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Canvas -->
+            <canvas id="collectorCanvas" class="w-full h-full block bg-slate-950 cursor-pointer"></canvas>
+
+            <div id="menuOverlay" class="absolute inset-0 z-30 bg-slate-950/95 backdrop-blur-md p-4 sm:p-8 flex flex-col items-center justify-between overflow-y-auto">
+                
+                <div class="text-center space-y-2 max-w-md my-auto">
+                    <span class="inline-block px-3 py-1 rounded-full bg-pink-950/80 border border-pink-500/40 text-[11px] font-arcade font-bold text-pink-300">
+                        LGBTQ+ IDENTIFICATION ARCADE
+                    </span>
+                    <h2 class="font-arcade font-black text-3xl sm:text-5xl tracking-wider gradient-text py-1">
+                        PRIDE FLAG COLLECTOR
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+                        Collect authentic LGBTQ+ Pride Flags while dodging country decoy flags and confusing fake stripe banners!
+                    </p>
+                </div>
+
+                <!-- Rules Summary Card -->
+                <div class="w-full max-w-lg glass-panel rounded-2xl p-4 my-3 border border-slate-700/80 space-y-3">
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/40 space-y-1">
+                            <span class="font-arcade font-bold text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-emerald-400"></i> COLLECT REAL FLAGS:
+                            </span>
+                            <p class="text-[11px] text-slate-300">Progress, Trans, Non-Binary, Lesbian, Bi, Pan, Ace, Intersex, Agender & more!</p>
+                        </div>
+                        <div class="p-3 rounded-xl bg-rose-950/40 border border-rose-500/40 space-y-1">
+                            <span class="font-arcade font-bold text-rose-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-400"></i> AVOID DECOYS:
+                            </span>
+                            <p class="text-[11px] text-slate-300">Country flags (Sweden, France, etc.) & fake trick stripe banners!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center gap-2.5 w-full max-w-md my-auto pt-2">
+                    <button onclick="launchGame()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 text-white font-arcade font-extrabold text-sm sm:text-base tracking-wider arcade-btn pulse-glow">
+                        <i class="fa-solid fa-play mr-2"></i> START CATCHING
+                    </button>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button onclick="openCustomizerModal()" class="flex-1 sm:flex-none px-4 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs whitespace-nowrap arcade-btn flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-palette text-pink-400"></i> SKINS
+                        </button>
+                        <button onclick="openCodexModal()" class="flex-1 sm:flex-none px-4 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-xs whitespace-nowrap arcade-btn flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-book-open text-purple-400"></i> CODEX
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Personal High Score -->
+                <div class="text-xs text-slate-400 font-arcade pt-2 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-amber-400"></i> PERSONAL HIGH SCORE: <span id="menuHighScoreText" class="text-amber-400 font-bold">0</span>
+                </div>
+
+            </div>
+
+            <div id="gameOverOverlay" class="hidden absolute inset-0 z-30 bg-slate-950/95 backdrop-blur-md p-6 flex flex-col items-center justify-center text-center space-y-5 animate-pop">
+                <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/40 text-rose-400 flex items-center justify-center text-3xl">
+                    <i class="fa-solid fa-flag text-rose-400"></i>
+                </div>
+
+                <div class="space-y-1">
+                    <h2 class="font-arcade font-black text-2xl sm:text-4xl text-rose-400 tracking-wider">RUN COMPLETE</h2>
+                    <p class="text-xs text-slate-300">Great effort! Learning flags makes our community stronger.</p>
+                </div>
+
+                <!-- Stats Summary -->
+                <div class="w-full max-w-sm glass-panel rounded-2xl p-4 border border-slate-800 space-y-3 text-xs sm:text-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 font-medium">Final Score:</span>
+                        <span id="winScore" class="font-arcade font-bold text-cyan-400 text-lg">0</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 font-medium">Pride Flags Caught:</span>
+                        <span id="winFlagsCaught" class="font-arcade font-bold text-emerald-400">0</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-400 font-medium">Decoys Avoided:</span>
+                        <span id="winDecoysAvoided" class="font-arcade font-bold text-amber-400">0</span>
+                    </div>
+                    <div id="newRecordBadge" class="hidden py-1 rounded-lg bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 font-arcade text-xs font-bold">
+                        🎉 NEW HIGH SCORE RECORD!
+                    </div>
+                </div>
+
+                <!-- Stage Win Controls -->
+                <div class="flex items-center gap-3 w-full max-w-sm">
+                    <button onclick="launchGame()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-arcade font-bold text-xs sm:text-sm arcade-btn">
+                        TRY AGAIN <i class="fa-solid fa-rotate-right ml-1"></i>
+                    </button>
+                    <button onclick="returnToMenu()" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-bold text-xs arcade-btn">
+                        MENU
+                    </button>
+                </div>
+            </div>
+
+            <div id="touchControls" class="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between pointer-events-none sm:hidden">
+                <div class="flex gap-2 pointer-events-auto w-full justify-between px-4">
+                    <button id="btnTouchLeft" class="w-16 h-16 rounded-2xl bg-slate-900/85 border border-slate-700 text-cyan-400 text-2xl font-bold flex items-center justify-center active:bg-cyan-950/60 active:scale-95 transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button id="btnTouchRight" class="w-16 h-16 rounded-2xl bg-slate-900/85 border border-slate-700 text-cyan-400 text-2xl font-bold flex items-center justify-center active:bg-cyan-950/60 active:scale-95 transition">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="codexModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <!-- ... existing codex modal code ... -->
+    </div>
+
+    <div id="customizerModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel rounded-3xl p-6 max-w-2xl w-full border border-slate-700 space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h3 class="font-arcade font-bold text-base text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-palette text-pink-400"></i> CUSTOMIZE PADDLE SKIN
+                </h3>
+                <button onclick="closeCustomizerModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <p class="text-xs text-slate-300">Select a Pride Flag or classic theme to customize your catcher paddle during gameplay:</p>
+
+            <div id="skinSelectionGrid" class="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pr-1">
+                <!-- Populated dynamically with flag skins -->
+            </div>
+
+            <button onclick="closeCustomizerModal()" class="w-full py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-arcade font-bold text-xs">
+                EQUIP & RETURN
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Real LGBTQ+ Pride Flags Database
+        const REAL_PRIDE_FLAGS = [
+            {
+                id: 'progress', name: 'Progress Pride Flag', isReal: true,
+                description: 'Features a chevron with Black, Brown, Trans, and Intersex colors.',
+                colors: ['#E50000', '#FF8D00', '#FFEE00', '#008121', '#004CFF', '#760089'],
+                hasChevron: true, chevronColors: ['#FFFFFF', '#FFAFC8', '#73D7EE', '#613915', '#000000']
+            },
+            {
+                id: 'rainbow', name: 'Rainbow Flag', isReal: true,
+                description: 'Classic 6-stripe symbol created by Gilbert Baker in 1978.',
+                colors: ['#E50000', '#FF8D00', '#FFEE00', '#008121', '#004CFF', '#760089']
+            },
+            {
+                id: 'trans', name: 'Transgender Flag', isReal: true,
+                description: 'Light blue, pink, and white stripes created by Monica Helms in 1999.',
+                colors: ['#5BCEFA', '#F5A9B8', '#FFFFFF', '#F5A9B8', '#5BCEFA']
+            },
+            {
+                id: 'nonbinary', name: 'Non-Binary Flag', isReal: true,
+                description: 'Yellow, white, purple, and black stripes created by Kye Rowan.',
+                colors: ['#FFF430', '#FFFFFF', '#9C59D1', '#2C2C2C']
+            },
+            {
+                id: 'bisexual', name: 'Bisexual Flag', isReal: true,
+                description: 'Pink, purple, and blue stripes created by Michael Page in 1998.',
+                colors: ['#D60270', '#D60270', '#9B4F96', '#0038A8', '#0038A8']
+            },
+            {
+                id: 'lesbian', name: 'Lesbian Flag', isReal: true,
+                description: 'Sunset orange, white, and pink shades created by Emily Gwen.',
+                colors: ['#D52D00', '#EF7627', '#FFFFFF', '#B75592', '#A30062']
+            },
+            {
+                id: 'pansexual', name: 'Pansexual Flag', isReal: true,
+                description: 'Pink, yellow, and cyan stripes symbolizing attraction across all genders.',
+                colors: ['#FF218C', '#FFD800', '#00B4FF']
+            },
+            {
+                id: 'asexual', name: 'Asexual Flag', isReal: true,
+                description: 'Black, grey, white, and purple stripes symbolizing asexuality.',
+                colors: ['#000000', '#A3A3A3', '#FFFFFF', '#800080']
+            },
+            {
+                id: 'intersex', name: 'Intersex Flag', isReal: true,
+                description: 'Yellow field with an unbroken purple circle created by Morgan Carpenter.',
+                colors: ['#FFDA00'], isCircleFlag: true, circleColor: '#7A00AC'
+            },
+            {
+                id: 'genderfluid', name: 'Genderfluid Flag', isReal: true,
+                description: 'Pink, white, purple, black, and blue stripes created by JJ Poole.',
+                colors: ['#FF76A4', '#FFFFFF', '#C011D7', '#000000', '#2C30B4']
+            },
+            {
+                id: 'agender', name: 'Agender Flag', isReal: true,
+                description: 'Black, grey, white, and green stripes representing genderless identity.',
+                colors: ['#000000', '#B9B9B9', '#FFFFFF', '#B8F483', '#FFFFFF', '#B9B9B9', '#000000']
+            },
+            {
+                id: 'aromantic', name: 'Aromantic Flag', isReal: true,
+                description: 'Dark green, light green, white, grey, and black stripes.',
+                colors: ['#3BA740', '#A8D47A', '#FFFFFF', '#ABABAB', '#000000']
+            }
+        ];
+
+        // Decoy Flags (Countries & Fake combinations)
+        const DECOY_FLAGS = [
+            { id: 'sweden', name: 'Country Flag: Sweden 🇸🇪', isReal: false, type: 'country', colors: ['#006AA7'], crossColor: '#FECC00' },
+            { id: 'france', name: 'Country Flag: France 🇫🇷', isReal: false, type: 'country', vertColors: ['#002395', '#FFFFFF', '#ED2939'] },
+            { id: 'germany', name: 'Country Flag: Germany 🇩🇪', isReal: false, type: 'country', colors: ['#000000', '#DD0000', '#FFCE00'] },
+            { id: 'japan', name: 'Country Flag: Japan 🇯🇵', isReal: false, type: 'country', colors: ['#FFFFFF'], isCircleFlag: true, circleColor: '#BC002D' },
+            { id: 'italy', name: 'Country Flag: Italy 🇮🇹', isReal: false, type: 'country', vertColors: ['#009246', '#FFFFFF', '#CE2B37'] },
+            { id: 'colombia', name: 'Country Flag: Colombia 🇨🇴', isReal: false, type: 'country', colors: ['#FCD116', '#FCD116', '#003893', '#CE1126'] },
+            { id: 'fake_1', name: 'Decoy: Random Neon Stripes', isReal: false, type: 'fake', colors: ['#222222', '#39FF14', '#FF0055', '#222222'] },
+            { id: 'fake_2', name: 'Decoy: Halloween Stripes', isReal: false, type: 'fake', colors: ['#FF6600', '#000000', '#9900FF', '#FF6600'] },
+            { id: 'fake_3', name: 'Decoy: Signal Banner', isReal: false, type: 'fake', colors: ['#000066', '#FFFFFF', '#000066'] }
+        ];
+
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'catch_real') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.08);
+                    osc.frequency.setValueAtTime(783.99, now + 0.16);
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+                    osc.start(now);
+                    osc.stop(now + 0.22);
+                } else if (type === 'catch_decoy') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, now);
+                    osc.frequency.linearRampToValueAtTime(60, now + 0.25);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'powerup') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(1000, now + 0.2);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('audioIcon');
+            if (audioEnabled) {
+                icon.className = "fa-solid fa-volume-high text-xs";
+                playSound('catch_real');
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-xs text-slate-500";
+            }
+        }
+
+        function triggerQuickExit() {
+            window.location.href = "https://www.google.com";
+        }
+
+        let canvas, ctx;
+        let animationFrameId = null;
+        let gameActive = false;
+
+        let score = 0;
+        let streak = 0;
+        let hearts = 3;
+        let realFlagsCaught = 0;
+        let decoysAvoided = 0;
+        let highScore = parseInt(localStorage.getItem('pride_collector_highscore') || '0');
+        let selectedSkin = localStorage.getItem('pride_collector_skin') || 'rainbow';
+
+        // Player Avatar Basket
+        const player = {
+            x: 0,
+            y: 0,
+            width: 76,
+            height: 24,
+            speed: 7.5,
+            shieldTimer: 0,
+            scannerTimer: 0
+        };
+
+        const keys = { left: false, right: false };
+        let activeFlags = [];
+        let particles = [];
+        let spawnTimer = 0;
+
+        function resizeCanvas() {
+            const container = document.getElementById('gameContainer');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+
+            player.y = canvas.height - 40;
+            if (player.x === 0) player.x = canvas.width / 2 - player.width / 2;
+        }
+
+        function bindControls() {
+            window.addEventListener('keydown', (e) => {
+                if (!gameActive) return;
+                if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+                if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+            });
+
+            window.addEventListener('keyup', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+                if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+            });
+
+            // Touch Control Buttons
+            const bindTouchBtn = (id, keyName) => {
+                const el = document.getElementById(id);
+                el.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    keys[keyName] = true;
+                });
+                el.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    keys[keyName] = false;
+                });
+            };
+
+            bindTouchBtn('btnTouchLeft', 'left');
+            bindTouchBtn('btnTouchRight', 'right');
+
+            // Canvas Direct Touch Movement
+            canvas.addEventListener('touchmove', (e) => {
+                if (!gameActive) return;
+                const touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+                player.x = touchX - player.width / 2;
+            }, { passive: true });
+        }
+
+        function spawnFallingFlag() {
+            const isReal = Math.random() < 0.6; // 60% chance real pride flag, 40% decoy
+            let template;
+
+            if (isReal) {
+                template = REAL_PRIDE_FLAGS[Math.floor(Math.random() * REAL_PRIDE_FLAGS.length)];
+            } else {
+                template = DECOY_FLAGS[Math.floor(Math.random() * DECOY_FLAGS.length)];
+            }
+
+            activeFlags.push({
+                ...template,
+                x: Math.random() * (canvas.width - 50) + 10,
+                y: -40,
+                width: 44,
+                height: 28,
+                vy: 2.2 + Math.random() * 1.5 + (score / 1500),
+                rotation: (Math.random() - 0.5) * 0.2
+            });
+        }
+
+        function showNotification(text, isGood = true) {
+            const banner = document.getElementById('hudNotice');
+            const icon = document.getElementById('noticeIcon');
+            const txt = document.getElementById('noticeText');
+
+            txt.innerText = text;
+            if (isGood) {
+                icon.className = "fa-solid fa-circle-check text-emerald-400";
+                banner.className = "px-3 py-1 rounded-full bg-slate-900/90 border border-emerald-500/50 text-emerald-200 font-arcade text-xs font-bold animate-pulse flex items-center gap-1.5";
+            } else {
+                icon.className = "fa-solid fa-triangle-exclamation text-rose-400";
+                banner.className = "px-3 py-1 rounded-full bg-slate-900/90 border border-rose-500/50 text-rose-200 font-arcade text-xs font-bold animate-pulse flex items-center gap-1.5";
+            }
+
+            banner.classList.remove('hidden');
+            setTimeout(() => banner.classList.add('hidden'), 2200);
+        }
+
+        function updatePhysics() {
+            // Player Movement
+            if (keys.left) player.x -= player.speed;
+            if (keys.right) player.x += player.speed;
+
+            // Boundaries
+            if (player.x < 0) player.x = 0;
+            if (player.x > canvas.width - player.width) player.x = canvas.width - player.width;
+
+            // Spawn Flags
+            spawnTimer++;
+            if (spawnTimer > Math.max(35, 75 - Math.floor(score / 300))) {
+                spawnFallingFlag();
+                spawnTimer = 0;
+            }
+
+            // Update Active Flags
+            for (let i = activeFlags.length - 1; i >= 0; i--) {
+                const f = activeFlags[i];
+                f.y += f.vy;
+
+                // Collision with Player Collector Basket
+                if (rectIntersect(player.x, player.y, player.width, player.height, f.x, f.y, f.width, f.height)) {
+                    if (f.isReal) {
+                        // Caught Real Pride Flag
+                        score += 100 + (streak * 10);
+                        streak++;
+                        realFlagsCaught++;
+                        playSound('catch_real');
+                        showNotification(`+100 ${f.name}!`, true);
+                        spawnParticles(f.x + f.width/2, f.y + f.height/2, '#00E676', 10);
+                    } else {
+                        // Caught Decoy Flag
+                        if (player.shieldTimer > 0) {
+                            showNotification(`Shield Absorbed ${f.name}!`, true);
+                            playSound('powerup');
+                        } else {
+                            hearts--;
+                            streak = 0;
+                            playSound('catch_decoy');
+                            showNotification(`Oops! ${f.name} is not a Pride Flag!`, false);
+                            spawnParticles(f.x + f.width/2, f.y + f.height/2, '#FF007F', 12);
+                            updateHeartsHud();
+                            if (hearts <= 0) {
+                                gameOver();
+                                return;
+                            }
+                        }
+                    }
+                    activeFlags.splice(i, 1);
+                } else if (f.y > canvas.height + 40) {
+                    // Missed flag
+                    if (!f.isReal) decoysAvoided++;
+                    activeFlags.splice(i, 1);
+                }
+            }
+
+            // Update Particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const pt = particles[i];
+                pt.x += pt.vx;
+                pt.y += pt.vy;
+                pt.life -= 0.04;
+                if (pt.life <= 0) particles.splice(i, 1);
+            }
+
+            document.getElementById('hudScore').innerText = score.toString().padStart(4, '0');
+            document.getElementById('hudStreak').innerText = `STREAK: ${streak}`;
+        }
+
+        function updateHeartsHud() {
+            const hDiv = document.getElementById('hudHearts');
+            hDiv.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < hearts) {
+                    hDiv.innerHTML += `<i class="fa-solid fa-heart text-rose-500"></i>`;
+                } else {
+                    hDiv.innerHTML += `<i class="fa-solid fa-heart text-slate-700"></i>`;
+                }
+            }
+        }
+
+        function spawnParticles(x, y, color, count) {
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 7,
+                    vy: (Math.random() - 0.5) * 7,
+                    color,
+                    life: 1.0,
+                    size: Math.random() * 4 + 2
+                });
+            }
+        }
+
+        function rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+            return !(x2 > x1 + w1 || x2 + w2 < x1 || y2 > y1 + h1 || y2 + h2 < y1);
+        }
+
+        function renderWorld() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Background Grid Stars
+            ctx.fillStyle = "#ffffff";
+            for (let i = 0; i < 40; i++) {
+                const sx = (i * 47) % canvas.width;
+                const sy = (i * 23) % canvas.height;
+                ctx.globalAlpha = Math.sin(Date.now() * 0.002 + i) * 0.3 + 0.3;
+                ctx.fillRect(sx, sy, 2, 2);
+            }
+            ctx.globalAlpha = 1.0;
+
+            // 2. Render Falling Flags
+            activeFlags.forEach(f => {
+                ctx.save();
+                ctx.translate(f.x + f.width/2, f.y + f.height/2);
+                ctx.rotate(f.rotation);
+
+                // Flag Shadow
+                ctx.fillStyle = "rgba(0,0,0,0.4)";
+                ctx.fillRect(-f.width/2 + 2, -f.height/2 + 2, f.width, f.height);
+
+                // Render Flag Canvas Graphic
+                drawSingleFlag(ctx, -f.width/2, -f.height/2, f.width, f.height, f);
+
+                ctx.restore();
+            });
+
+            // 3. Render Player Basket Avatar with Custom Pride Flag Skin
+            ctx.save();
+            ctx.translate(player.x, player.y);
+
+            // Clip inside paddle rounded rect
+            ctx.save();
+            ctx.beginPath();
+            ctx.roundRect(0, 0, player.width, player.height, 8);
+            ctx.clip();
+
+            if (selectedSkin === 'neon') {
+                const grad = ctx.createLinearGradient(0, 0, player.width, 0);
+                grad.addColorStop(0, '#FF007F');
+                grad.addColorStop(0.5, '#00EAFF');
+                grad.addColorStop(1, '#8A2BE2');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, player.width, player.height);
+            } else {
+                const flagData = REAL_PRIDE_FLAGS.find(f => f.id === selectedSkin) || REAL_PRIDE_FLAGS[1];
+                drawSingleFlag(ctx, 0, 0, player.width, player.height, flagData);
+            }
+            ctx.restore();
+
+            // Semi-transparent dark overlay for crisp readable paddle text
+            ctx.fillStyle = "rgba(15, 23, 42, 0.4)";
+            ctx.beginPath();
+            ctx.roundRect(0, 0, player.width, player.height, 8);
+            ctx.fill();
+
+            // Glowing Outer Stroke Border
+            const strokeColor = getSkinPrimaryColor(selectedSkin);
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 2.5;
+            ctx.shadowColor = strokeColor;
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.roundRect(0, 0, player.width, player.height, 8);
+            ctx.stroke();
+
+            // Basket Label
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = "#000000";
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 8.5px Orbitron";
+            ctx.textAlign = "center";
+            ctx.fillText(getSkinDisplayName(selectedSkin), player.width / 2, player.height / 2 + 3);
+
+            ctx.restore();
+
+            // 4. Render Particles
+            particles.forEach(pt => {
+                ctx.fillStyle = pt.color;
+                ctx.globalAlpha = pt.life;
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+        }
+
+        function getSkinPrimaryColor(skinId) {
+            if (skinId === 'neon') return '#00D2FF';
+            const flag = REAL_PRIDE_FLAGS.find(f => f.id === skinId);
+            return flag && flag.colors ? flag.colors[0] : '#00D2FF';
+        }
+
+        function getSkinDisplayName(skinId) {
+            if (skinId === 'neon') return 'NEON ARCADE';
+            const flag = REAL_PRIDE_FLAGS.find(f => f.id === skinId);
+            if (!flag) return 'PRIDE CATCHER';
+            return flag.name.replace(' Pride Flag', '').replace(' Flag', '').toUpperCase();
+        }
+
+        function drawSingleFlag(c, x, y, w, h, flagData) {
+            c.save();
+            c.strokeStyle = "rgba(255,255,255,0.3)";
+            c.lineWidth = 1;
+
+            if (flagData.vertColors) {
+                // Vertical Stripe Flag (e.g. France, Italy)
+                const stripeW = w / flagData.vertColors.length;
+                flagData.vertColors.forEach((col, idx) => {
+                    c.fillStyle = col;
+                    c.fillRect(x + (idx * stripeW), y, stripeW, h);
+                });
+            } else if (flagData.crossColor) {
+                // Nordic Cross Flag (Sweden)
+                c.fillStyle = flagData.colors[0];
+                c.fillRect(x, y, w, h);
+                c.fillStyle = flagData.crossColor;
+                c.fillRect(x + w * 0.3, y, 6, h);
+                c.fillRect(x, y + h * 0.4, w, 6);
+            } else {
+                // Horizontal Stripe Flag
+                const colors = flagData.colors;
+                const stripeH = h / colors.length;
+                colors.forEach((col, idx) => {
+                    c.fillStyle = col;
+                    c.fillRect(x, y + (idx * stripeH), w, stripeH);
+                });
+
+                // Chevron (Progress Pride)
+                if (flagData.hasChevron) {
+                    const chevCols = flagData.chevronColors;
+                    chevCols.forEach((col, idx) => {
+                        const offset = idx * 4;
+                        c.fillStyle = col;
+                        c.beginPath();
+                        c.moveTo(x, y);
+                        c.lineTo(x + (w * 0.45) - offset, y + h / 2);
+                        c.lineTo(x, y + h);
+                        c.closePath();
+                        c.fill();
+                    });
+                }
+
+                // Circle (Intersex / Japan)
+                if (flagData.isCircleFlag) {
+                    c.fillStyle = flagData.circleColor;
+                    c.beginPath();
+                    c.arc(x + w / 2, y + h / 2, h * 0.28, 0, Math.PI * 2);
+                    c.fill();
+                }
+            }
+
+            c.strokeRect(x, y, w, h);
+            c.restore();
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+            updatePhysics();
+            renderWorld();
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function launchGame() {
+            initAudio();
+            score = 0;
+            streak = 0;
+            hearts = 3;
+            realFlagsCaught = 0;
+            decoysAvoided = 0;
+
+            activeFlags = [];
+            particles = [];
+            spawnTimer = 0;
+
+            updateHeartsHud();
+            document.getElementById('hudScore').innerText = "0000";
+            document.getElementById('hudStreak').innerText = "STREAK: 0";
+            document.getElementById('menuOverlay').classList.add('hidden');
+            document.getElementById('gameOverOverlay').classList.add('hidden');
+
+            gameActive = true;
+
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(gameLoop);
+            playSound('catch_real');
+        }
+
+        function returnToMenu() {
+            gameActive = false;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            document.getElementById('menuOverlay').classList.remove('hidden');
+            document.getElementById('gameOverOverlay').classList.add('hidden');
+            document.getElementById('menuHighScoreText').innerText = highScore.toLocaleString();
+        }
+
+        function gameOver() {
+            gameActive = false;
+            playSound('catch_decoy');
+
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('pride_collector_highscore', highScore.toString());
+                document.getElementById('newRecordBadge').classList.remove('hidden');
+            } else {
+                document.getElementById('newRecordBadge').classList.add('hidden');
+            }
+
+            document.getElementById('winScore').innerText = score.toLocaleString();
+            document.getElementById('winFlagsCaught').innerText = realFlagsCaught;
+            document.getElementById('winDecoysAvoided').innerText = decoysAvoided;
+            document.getElementById('menuHighScoreText').innerText = highScore.toLocaleString();
+
+            document.getElementById('gameOverOverlay').classList.remove('hidden');
+        }
+
+        function populateCodex() {
+            const realGrid = document.getElementById('realFlagsCodexGrid');
+            const decoyGrid = document.getElementById('decoyFlagsCodexGrid');
+
+            realGrid.innerHTML = '';
+            decoyGrid.innerHTML = '';
+
+            REAL_PRIDE_FLAGS.forEach(flag => {
+                const card = document.createElement('div');
+                card.className = "p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3";
+                
+                // SVG Flag Preview
+                let flagPreview = `<div class="w-12 h-8 rounded border border-slate-700 overflow-hidden relative shrink-0">`;
+                const colors = flag.colors;
+                const stripeH = 100 / colors.length;
+                colors.forEach((c) => {
+                    flagPreview += `<div style="background-color: ${c}; height: ${stripeH}%"></div>`;
+                });
+                flagPreview += `</div>`;
+
+                card.innerHTML = `${flagPreview}<div><strong class="text-xs text-slate-200 block">${flag.name}</strong><span class="text-[10px] text-slate-400 leading-tight block">${flag.description}</span></div>`;
+                realGrid.appendChild(card);
+            });
+
+            DECOY_FLAGS.forEach(flag => {
+                const card = document.createElement('div');
+                card.className = "p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3";
+                
+                card.innerHTML = `<div class="w-12 h-8 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-ban text-rose-500"></i></div><div><strong class="text-xs text-rose-300 block">${flag.name}</strong><span class="text-[10px] text-slate-400 block">Not an LGBTQ+ Pride Flag. Avoid collecting!</span></div>`;
+                decoyGrid.appendChild(card);
+            });
+        }
+
+        function openCodexModal() {
+            populateCodex();
+            document.getElementById('codexModal').classList.remove('hidden');
+        }
+        function closeCodexModal() {
+            document.getElementById('codexModal').classList.add('hidden');
+        }
+
+        function openCustomizerModal() {
+            populateCustomizer();
+            document.getElementById('customizerModal').classList.remove('hidden');
+        }
+        function closeCustomizerModal() {
+            document.getElementById('customizerModal').classList.add('hidden');
+        }
+
+        function populateCustomizer() {
+            const grid = document.getElementById('skinSelectionGrid');
+            grid.innerHTML = '';
+
+            // 1. Neon Classic Arcade Skin Option
+            const neonCard = createSkinCard('neon', 'Neon Arcade Gradient', ['#FF007F', '#00EAFF', '#8A2BE2']);
+            grid.appendChild(neonCard);
+
+            // 2. All Authentic Pride Flag Skins
+            REAL_PRIDE_FLAGS.forEach(flag => {
+                const card = createSkinCard(flag.id, flag.name, flag.colors, flag);
+                grid.appendChild(card);
+            });
+        }
+
+        function createSkinCard(id, name, colors, flagData) {
+            const card = document.createElement('div');
+            const isSelected = selectedSkin === id;
+
+            card.className = `p-3 rounded-2xl border transition cursor-pointer flex flex-col items-center gap-2 ${
+                isSelected 
+                    ? 'bg-purple-950/60 border-pink-500 shadow-lg shadow-pink-500/20 ring-2 ring-pink-500/50' 
+                    : 'bg-slate-900/80 border-slate-800 hover:border-slate-600 hover:bg-slate-800/80'
+            }`;
+
+            // Mini Paddle Preview Canvas
+            const previewId = `skin_prev_${id}`;
+            const labelText = name.replace(' Pride Flag', '').replace(' Flag', '');
+
+            card.innerHTML = `
+                <div class="w-full h-9 rounded-lg border border-slate-700/80 overflow-hidden relative flex items-center justify-center bg-slate-950">
+                    <canvas id="${previewId}" width="140" height="32" class="w-full h-full block"></canvas>
+                </div>
+                <div class="flex items-center justify-between w-full text-xs font-bold font-arcade">
+                    <span class="${isSelected ? 'text-pink-300' : 'text-slate-200'} text-[11px] truncate">${labelText}</span>
+                    ${isSelected ? '<span class="text-[9px] bg-pink-500/20 border border-pink-500/50 text-pink-300 px-1.5 py-0.5 rounded">EQUIPPED</span>' : ''}
+                </div>
+            `;
+
+            card.onclick = () => {
+                selectSkin(id);
+                playSound('powerup');
+            };
+
+            // Render Preview onto Mini Canvas after creation
+            setTimeout(() => {
+                const cvs = document.getElementById(previewId);
+                if (!cvs) return;
+                const c = cvs.getContext('2d');
+                
+                c.save();
+                c.beginPath();
+                c.roundRect(0, 0, cvs.width, cvs.height, 6);
+                c.clip();
+
+                if (id === 'neon') {
+                    const g = c.createLinearGradient(0, 0, cvs.width, 0);
+                    g.addColorStop(0, '#FF007F');
+                    g.addColorStop(0.5, '#00EAFF');
+                    g.addColorStop(1, '#8A2BE2');
+                    c.fillStyle = g;
+                    c.fillRect(0, 0, cvs.width, cvs.height);
+                } else if (flagData) {
+                    drawSingleFlag(c, 0, 0, cvs.width, cvs.height, flagData);
+                }
+
+                c.restore();
+
+                c.fillStyle = "rgba(15, 23, 42, 0.35)";
+                c.fillRect(0, 0, cvs.width, cvs.height);
+
+                c.strokeStyle = isSelected ? '#FF007F' : 'rgba(255,255,255,0.3)';
+                c.lineWidth = 2;
+                c.strokeRect(0, 0, cvs.width, cvs.height);
+            }, 0);
+
+            return card;
+        }
+
+        function selectSkin(skinId) {
+            selectedSkin = skinId;
+            localStorage.setItem('pride_collector_skin', skinId);
+            populateCustomizer();
+        }
+
+        window.onload = function() {
+            canvas = document.getElementById('collectorCanvas');
+            ctx = canvas.getContext('2d');
+
+            resizeCanvas();
+            bindControls();
+
+            window.addEventListener('resize', resizeCanvas);
+            document.getElementById('menuHighScoreText').innerText = highScore.toLocaleString();
+        };
+    </script>
+</body>
+</html>
+```
+
+### What's New:
+1. **Paddle Skin Customization Button**: Added a **"Paddle Skin"** / **"SKINS"** button in both the top header and main menu overlay.
+2. **Skin Customizer Modal**: Opens a grid displaying mini paddle previews for every Pride Flag (Progress, Trans, Rainbow, Non-Binary, Lesbian, Bisexual, Pansexual, Asexual, Intersex, Genderfluid, Agender, Aromantic) as well as the Classic Neon Arcade skin.
+3. **Dynamic Gameplay Rendering**: When you equip a skin, the paddle dynamically renders the selected Pride flag pattern on your catcher during gameplay with a sleek glowing border and matching flag label.
+4. **Persistent Preference**: Automatically saves your selected paddle skin to `localStorage`.

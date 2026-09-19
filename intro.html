@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LGBTQ Moray - Gaming Hub</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        arcade: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#080d1a',
+                        cardBg: 'rgba(15, 23, 42, 0.88)',
+                        morayDark: '#1a2e26'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #060912;
+            color: #f8fafc;
+            user-select: none;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #e53935, #fb8c00, #fdd835, #43a047, #1e88e5, #8e24aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-sub {
+            background: linear-gradient(135deg, #00E676, #00D2FF, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #FF007F, #8A2BE2, #00D2FF);
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease infinite;
+            box-shadow: 0 0 25px rgba(255, 0, 127, 0.5);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .start-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 35px rgba(0, 210, 255, 0.8);
+        }
+
+        .start-btn:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3D Spinning & Volumetric Lighting Animations for Logo */
+        @keyframes logoSpin3D {
+            0% {
+                transform: perspective(1000px) rotateY(0deg);
+            }
+            100% {
+                transform: perspective(1000px) rotateY(360deg);
+            }
+        }
+
+        @keyframes pulseSun {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.18); opacity: 1; filter: drop-shadow(0 0 8px #FFEA00); }
+        }
+
+        @keyframes waveFlow1 {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-15px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes waveFlow2 {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(18px); }
+            100% { transform: translateX(0); }
+        }
+
+        .logo-container-3d {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            animation: logoSpin3D 8s linear infinite;
+        }
+
+        .animated-sun {
+            transform-origin: center;
+            animation: pulseSun 3s ease-in-out infinite;
+        }
+
+        .animated-wave-1 {
+            animation: waveFlow1 4s ease-in-out infinite;
+        }
+
+        .animated-wave-2 {
+            animation: waveFlow2 5s ease-in-out infinite;
+        }
+
+        .logo-container-3d {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .logo-spin-3d-object {
+            transform-style: preserve-3d;
+            animation: logoSpin3D 8s linear infinite;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo-3d-layer {
+            width: 100%;
+            height: 100%;
+            backface-visibility: visible;
+        }
+
+        .logo-depth-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .animated-sun {
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #060912; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-100 antialiased select-none min-h-screen">
+
+    <header class="z-40 glass-panel border-b border-slate-800 px-4 py-3 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="showIntroScreen()">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-cyan-400 flex items-center justify-center text-white text-base font-black shadow-md shadow-purple-500/30">
+                <i class="fa-solid fa-gamepad"></i>
+            </div>
+            <div>
+                <h1 class="font-arcade font-bold text-sm sm:text-base tracking-wider gradient-text">LGBTQ MORAY</h1>
+                <p class="text-[10px] text-slate-400 font-semibold tracking-wide">Youth Gaming Portal</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button id="soundToggleBtn" onclick="toggleAudio()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-center transition" title="Toggle Sound Effects">
+                <i id="audioIcon" class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+            <button onclick="triggerQuickExit()" title="Quick Safe Exit" class="px-3.5 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-600/50 text-rose-200 text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-person-running"></i>
+                <span class="hidden sm:inline">Quick Exit</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 relative flex flex-col items-center justify-center p-4 overflow-hidden scanlines">
+
+        <!-- VIEW 1: MAIN INTRO HERO SCREEN -->
+        <section id="introView" class="relative z-10 flex flex-col items-center justify-center text-center space-y-6 max-w-lg w-full py-6">
+            
+            <!-- LGBTQ Moray Animated Interactive 3D Card -->
+            <div id="logoCard" class="p-6 sm:p-8 rounded-3xl glass-panel border border-slate-700/80 shadow-2xl flex flex-col items-center bg-slate-950/70 w-full transition-transform duration-200 ease-out cursor-pointer" onclick="playSound('click')">
+
+                <!-- Hidden SVG Master Definition for 3D Extrusion Stacking -->
+                <svg class="hidden" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="logoCardClip">
+                            <rect width="500" height="500" rx="30" />
+                        </clipPath>
+                        <g id="morayLogoGraphic">
+                            <g clip-path="url(#logoCardClip)">
+                                <!-- Rainbow Outer Arches -->
+                                <g>
+                                    <path d="M 50 250 A 200 200 0 0 1 450 250 L 415 250 A 165 165 0 0 0 85 250 Z" fill="#E53935" />
+                                    <path d="M 85 250 A 165 165 0 0 1 415 250 L 380 250 A 130 130 0 0 0 120 250 Z" fill="#FB8C00" />
+                                    <path d="M 120 250 A 130 130 0 0 1 380 250 L 345 250 A 95 95 0 0 0 155 250 Z" fill="#FDD835" />
+                                    <path d="M 155 250 A 95 95 0 0 1 345 250 L 310 250 A 60 60 0 0 0 190 250 Z" fill="#43A047" />
+                                    <path d="M 190 250 A 60 60 0 0 1 310 250 L 275 250 A 25 25 0 0 0 225 250 Z" fill="#1E88E5" />
+                                </g>
+
+                                <!-- Inner Arch Cutout & Animated Sun Center -->
+                                <path d="M 225 250 A 25 25 0 0 1 275 250 Z" fill="#1C2D27" />
+                                <circle class="animated-sun" cx="250" cy="235" r="14" fill="#FFFFFF" />
+
+                                <!-- Green Mountain Hills Overlay -->
+                                <path d="M 50 250 Q 150 180 250 230 Q 350 180 450 250 L 450 300 L 50 300 Z" fill="#1D5333" />
+                                <path d="M 50 260 Q 180 200 280 255 Q 360 210 450 270 L 450 300 L 50 300 Z" fill="#2E7D46" opacity="0.95" />
+
+                                <!-- Pink Right Accent Slope -->
+                                <path d="M 330 255 Q 390 235 450 255 L 450 300 L 330 300 Z" fill="#F06292" />
+
+                                <!-- Blue Sea & Undulating Waves -->
+                                <rect x="50" y="270" width="400" height="60" fill="#81D4FA" />
+                                <g class="animated-wave-1">
+                                    <path d="M 40 285 Q 90 275 140 285 T 240 285 T 340 285 T 440 285 T 540 285 L 540 292 Q 440 282 340 292 T 240 292 T 140 292 T 40 292 Z" fill="#FFFFFF" />
+                                </g>
+                                <g class="animated-wave-2">
+                                    <path d="M 40 305 Q 90 295 140 305 T 240 305 T 340 305 T 440 305 T 540 305 L 540 312 Q 440 302 340 312 T 240 312 T 140 312 T 40 312 Z" fill="#FFFFFF" />
+                                </g>
+
+                                <!-- LGBTQ MORAY White Typography -->
+                                <text x="250" y="385" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="52" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">LGBTQ</text>
+                                <text x="250" y="450" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="52" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">MORAY</text>
+                            </g>
+                        </g>
+                    </defs>
+                </svg>
+
+                <!-- SVG Recreation of LGBTQ Moray Logo with 1cm Extruded 3D Depth Stack -->
+                <div class="logo-container-3d w-64 sm:w-80 h-auto filter drop-shadow-2xl my-2">
+                    <div class="logo-spin-3d-object">
+                        <!-- Front Face (Z = 8px) -->
+                        <div class="logo-3d-layer relative z-10" style="transform: translateZ(8px);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#morayLogoGraphic" />
+                            </svg>
+                        </div>
+
+                        <!-- Extrusion Side Rim Layers (creates ~1cm solid 3D depth) -->
+                        <div class="logo-depth-layer" style="transform: translateZ(6px); filter: brightness(0.65) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+                        <div class="logo-depth-layer" style="transform: translateZ(4px); filter: brightness(0.55) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+                        <div class="logo-depth-layer" style="transform: translateZ(2px); filter: brightness(0.45) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+                        <div class="logo-depth-layer" style="transform: translateZ(0px); filter: brightness(0.35) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+                        <div class="logo-depth-layer" style="transform: translateZ(-2px); filter: brightness(0.3) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+                        <div class="logo-depth-layer" style="transform: translateZ(-4px); filter: brightness(0.25) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+                        <div class="logo-depth-layer" style="transform: translateZ(-6px); filter: brightness(0.2) contrast(1.3);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg"><use href="#morayLogoGraphic" /></svg>
+                        </div>
+
+                        <!-- Back Face (Z = -8px) -->
+                        <div class="logo-depth-layer" style="transform: translateZ(-8px) rotateY(180deg); filter: brightness(0.85);">
+                            <svg viewBox="0 0 500 500" class="w-full h-auto rounded-2xl overflow-visible" xmlns="http://www.w3.org/2000/svg">
+                                <use href="#morayLogoGraphic" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- The Gaming Hub Title -->
+                <div class="pt-4 space-y-1">
+                    <h2 class="font-arcade font-black text-3xl sm:text-5xl tracking-wider gradient-text-sub uppercase">
+                        THE GAMING HUB
+                    </h2>
+                    <p class="text-xs text-slate-300 font-medium tracking-wide">
+                        Inclusive Arcade & Educational Games for Youth
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- START BUTTON -->
+            <button onclick="launchGameHub()" class="start-btn w-full py-4 rounded-2xl text-white font-arcade font-black text-lg sm:text-xl tracking-widest uppercase cursor-pointer flex items-center justify-center gap-3 group border border-white/20">
+                <span>START</span>
+                <i class="fa-solid fa-play text-sm group-hover:translate-x-1 transition-transform"></i>
+            </button>
+
+            <!-- Community Credits Footer -->
+            <p class="text-[11px] text-slate-400 font-semibold tracking-wide">
+                <i class="fa-solid fa-heart text-pink-500 mr-1"></i> A Safe & Empowering Space for Everyone
+            </p>
+
+        </section>
+
+        <!-- VIEW 2: GAME SELECTION HUB PORTAL (REVEALED ON START) -->
+        <section id="portalView" class="hidden relative z-10 w-full max-w-4xl space-y-5 animate-pop">
+            
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-700/80 space-y-4 text-center">
+                <span class="inline-block px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-[11px] font-arcade font-bold text-purple-300">
+                    WELCOME TO LGBTQ MORAY GAMING HUB
+                </span>
+                <h2 class="font-arcade font-black text-2xl sm:text-4xl tracking-wider gradient-text">
+                    SELECT A GAME
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
+                    Choose from our collection of LGBTQ+ games—ranging from flag identification quizzes and retro runners to platformers and collector games!
+                </p>
+            </div>
+
+            <!-- Games Grid Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                <!-- Game 1: Pride Flag Collector -->
+                <div class="glass-panel rounded-2xl p-5 border border-pink-500/30 hover:border-pink-500/80 transition flex flex-col justify-between space-y-4 group">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-flag"></i>
+                            </span>
+                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-pink-950 text-pink-300 border border-pink-500/30">ARCADE CATCHER</span>
+                        </div>
+                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-pink-300 transition">Pride Flag Collector</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Catch authentic LGBTQ+ pride flags while dodging country flags and fake stripe decoys!
+                        </p>
+                    </div>
+                    <button onclick="launchSpecificGame('collector')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-pink-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+                        PLAY GAME <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Game 2: Spectrum Leap Platformer -->
+                <div class="glass-panel rounded-2xl p-5 border border-cyan-500/30 hover:border-cyan-500/80 transition flex flex-col justify-between space-y-4 group">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-person-running"></i>
+                            </span>
+                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">2D PLATFORMER</span>
+                        </div>
+                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-cyan-300 transition">Spectrum Leap</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Double jump, wall slide, and rainbow dash through synthwave levels to collect crystals and rescue friends.
+                        </p>
+                    </div>
+                    <button onclick="launchSpecificGame('platformer')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-cyan-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+                        PLAY GAME <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Game 3: Prism Dash Arcade -->
+                <div class="glass-panel rounded-2xl p-5 border border-purple-500/30 hover:border-purple-500/80 transition flex flex-col justify-between space-y-4 group">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-bolt"></i>
+                            </span>
+                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-500/30">SPACE RUNNER</span>
+                        </div>
+                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-purple-300 transition">Prism Dash</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Pilot a synthwave Pride Starship down neon space lanes, blasting dark void asteroids with your rainbow laser.
+                        </p>
+                    </div>
+                    <button onclick="launchSpecificGame('runner')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+                        PLAY GAME <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Game 4: Pride Flag Quest Quiz -->
+                <div class="glass-panel rounded-2xl p-5 border border-emerald-500/30 hover:border-emerald-500/80 transition flex flex-col justify-between space-y-4 group">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </span>
+                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30">QUIZ & EXPLORER</span>
+                        </div>
+                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-emerald-300 transition">Pride Flag Quest</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Test your knowledge identifying pride flags and explore the interactive guide to learn history & meanings.
+                        </p>
+                    </div>
+                    <button onclick="launchSpecificGame('quiz')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+                        PLAY GAME <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Back to Main Intro Button -->
+            <div class="text-center pt-2">
+                <button onclick="showIntroScreen()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold font-arcade transition">
+                    <i class="fa-solid fa-rotate-left mr-1.5"></i> RETURN TO INTRO SCREEN
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'start') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.setValueAtTime(554.37, now + 0.1);
+                    osc.frequency.setValueAtTime(659.25, now + 0.2);
+                    osc.frequency.setValueAtTime(880, now + 0.3);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+                    osc.start(now);
+                    osc.stop(now + 0.45);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(520, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                }
+            } catch (e) {}
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('audioIcon');
+            if (audioEnabled) {
+                icon.className = "fa-solid fa-volume-high text-xs";
+                playSound('click');
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-xs text-slate-500";
+            }
+        }
+
+        function triggerQuickExit() {
+            window.location.href = "https://www.google.com";
+        }
+
+        function showIntroScreen() {
+            playSound('click');
+            document.getElementById('introView').classList.remove('hidden');
+            document.getElementById('portalView').classList.add('hidden');
+        }
+
+        function launchGameHub() {
+            playSound('start');
+            setTimeout(() => {
+                document.getElementById('introView').classList.add('hidden');
+                document.getElementById('portalView').classList.remove('hidden');
+            }, 500);
+        }
+
+        function launchSpecificGame(gameKey) {
+            playSound('click');
+            if (gameKey === 'collector') window.location.href = 'pride_flag_collector.html';
+            else if (gameKey === 'platformer') window.location.href = 'spectrum_leap.html';
+            else if (gameKey === 'runner') window.location.href = 'prism_dash.html';
+            else if (gameKey === 'quiz') window.location.href = 'flag_quiz.html';
+        }
+
+        // 3D Mouse Tilt & Spark Burst Effects for Logo Card
+        function handleLogoTilt(e) {
+            const card = document.getElementById('logoCard');
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            const rotateX = (-y / rect.height) * 16;
+            const rotateY = (x / rect.width) * 16;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
+
+        function resetLogoTilt() {
+            const card = document.getElementById('logoCard');
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        }
+
+        window.onload = function() {
+            // Page ready
+        };
+    </script>
+</body>
+</html>

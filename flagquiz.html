@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pride Flag Quest - Identify the Flag Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: 'rgba(23, 32, 54, 0.85)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #f8fafc;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(23, 32, 54, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .rainbow-border {
+            border-image: linear-gradient(90deg, #FF007F, #FF7043, #FFEA00, #00E676, #00D2FF, #8A2BE2) 1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #FF7043, #FFEA00, #00E676, #00D2FF, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-pop {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .flag-shadow {
+            box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col font-sans antialiased text-slate-100">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-slate-800 px-4 py-3">
+        <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+            
+            <!-- Brand & Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchMode('intro')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-400 flex items-center justify-center text-white text-xl font-extrabold shadow-lg shadow-purple-500/20">
+                    <i class="fa-solid fa-flag"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-extrabold text-lg sm:text-xl tracking-tight gradient-text">PRIDE FLAG QUEST</h1>
+                    <p class="text-[11px] text-slate-400 font-medium">Identify & Learn Pride Flags</p>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Tab Toggles -->
+                <button id="navHomeBtn" onclick="switchMode('intro')" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 text-white shadow-lg transition">
+                    <i class="fa-solid fa-house mr-1"></i> Home
+                </button>
+                <button id="navQuizBtn" onclick="startGame()" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-gamepad mr-1"></i> Quiz
+                </button>
+                <button id="navExploreBtn" onclick="switchMode('explore')" class="px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-book-open mr-1"></i> Explorer
+                </button>
+
+                <!-- Quick Safe Exit -->
+                <button onclick="triggerQuickExit()" title="Quick Safe Exit" class="px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-600/50 text-rose-200 text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-person-running"></i>
+                    <span class="hidden sm:inline">Quick Exit</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN GAME AREA -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+        <!-- VIEW 0: INTRO SCREEN -->
+        <section id="introView" class="space-y-6 animate-pop text-center max-w-xl mx-auto py-4">
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-700/80 shadow-2xl relative overflow-hidden">
+                
+                <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-tr from-pink-500 via-purple-500 to-cyan-400 flex items-center justify-center text-white text-3xl sm:text-4xl font-extrabold shadow-xl shadow-purple-500/30 transform hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-flag"></i>
+                </div>
+                
+                <div class="space-y-2">
+                    <h2 class="font-display font-extrabold text-2xl sm:text-3xl gradient-text">Welcome to Pride Flag Quest</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Test your knowledge of LGBTQ+ pride flags, learn their histories, and explore the meanings behind every stripe!
+                    </p>
+                </div>
+
+                <!-- Feature Highlights -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left pt-2">
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
+                        <i class="fa-solid fa-gamepad text-purple-400 text-base"></i>
+                        <div>
+                            <div class="text-xs font-bold text-slate-200">Interactive Quiz</div>
+                            <div class="text-[10px] text-slate-400">Streaks & score bonuses</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
+                        <i class="fa-solid fa-book-open text-cyan-400 text-base"></i>
+                        <div>
+                            <div class="text-xs font-bold text-slate-200">Flag Explorer</div>
+                            <div class="text-[10px] text-slate-400">History & meanings</div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800 flex items-center gap-3">
+                        <i class="fa-solid fa-trophy text-amber-400 text-base"></i>
+                        <div>
+                            <div class="text-xs font-bold text-slate-200">Track Progress</div>
+                            <div class="text-[10px] text-slate-400">Local high scores</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button onclick="startGame()" class="flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white font-extrabold text-sm sm:text-base shadow-lg shadow-purple-500/25 transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i> Start Quiz
+                    </button>
+                    <button onclick="switchMode('explore')" class="py-3.5 px-6 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs sm:text-sm border border-slate-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> Browse Flags
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 1: QUIZ GAME -->
+        <section id="quizView" class="hidden space-y-6">
+            
+            <!-- Top Dashboard Bar -->
+            <div class="glass-panel rounded-2xl p-4 flex items-center justify-between gap-2 text-xs sm:text-sm flex-wrap">
+                <!-- Lives Display -->
+                <div class="flex items-center gap-1.5 bg-rose-950/60 border border-rose-500/40 px-3 py-1.5 rounded-xl">
+                    <span class="text-rose-300 font-semibold mr-1">Lives:</span>
+                    <div id="livesDisplay" class="flex items-center gap-1 text-rose-500 text-sm sm:text-base">
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-heart"></i>
+                        <i class="fa-solid fa-heart"></i>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <span class="text-slate-400 font-semibold">Score:</span>
+                    <span id="scoreDisplay" class="font-display font-extrabold text-lg text-emerald-400">0</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800">
+                    <i class="fa-solid fa-fire text-amber-400"></i>
+                    <span class="text-slate-400 font-semibold">Streak:</span>
+                    <span id="streakDisplay" class="font-display font-extrabold text-amber-400">0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-purple-400"></i>
+                    <span class="text-slate-400 font-semibold hidden sm:inline">Best:</span>
+                    <span id="highScoreDisplay" class="font-display font-extrabold text-purple-400">0</span>
+                </div>
+            </div>
+
+            <!-- Quiz Main Card -->
+            <div id="quizMainCard" class="glass-panel rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-700/80 relative overflow-hidden animate-pop">
+                
+                <!-- Question Prompt -->
+                <div class="text-center space-y-1">
+                    <span id="questionTag" class="px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-[11px] font-bold text-purple-300">
+                        Flag Challenge #1
+                    </span>
+                    <h2 class="font-display font-bold text-xl sm:text-2xl text-slate-100 pt-2">
+                        Which flag is this?
+                    </h2>
+                </div>
+
+                <!-- Flag Display Stage -->
+                <div class="flex justify-center my-4">
+                    <div id="flagContainer" class="w-full max-w-md h-48 sm:h-60 rounded-2xl overflow-hidden flag-shadow border-2 border-slate-700/80 bg-slate-900 flex items-center justify-center p-1 transition-transform duration-300 hover:scale-[1.02]">
+                        <!-- SVG Flag generated dynamically -->
+                    </div>
+                </div>
+
+                <!-- 4 Choice Buttons -->
+                <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <!-- Populated by JavaScript -->
+                </div>
+
+                <!-- Fact / Educational Breakdown Box -->
+                <div id="factBox" class="hidden p-4 rounded-2xl bg-slate-900/90 border border-purple-500/40 space-y-2 animate-pop">
+                    <div class="flex items-center justify-between text-xs font-bold text-purple-300">
+                        <span id="factTitle"><i class="fa-solid fa-lightbulb text-amber-400 mr-1"></i> Flag History & Meaning</span>
+                        <span id="factYear" class="bg-slate-800 px-2 py-0.5 rounded text-slate-400">Created: 2018</span>
+                    </div>
+                    <p id="factDescription" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                        Educational info goes here...
+                    </p>
+                    <button onclick="nextQuestion()" class="w-full mt-3 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-xs sm:text-sm shadow-md hover:opacity-95 transition">
+                        Next Flag <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- GAME OVER SCREEN CARD -->
+            <div id="gameOverCard" class="hidden glass-panel rounded-3xl p-6 sm:p-8 space-y-6 border border-rose-500/40 text-center animate-pop">
+                <div class="w-16 h-16 mx-auto rounded-full bg-rose-950 border-2 border-rose-500 flex items-center justify-center text-rose-400 text-2xl shadow-lg">
+                    <i class="fa-solid fa-heart-crack"></i>
+                </div>
+                <div class="space-y-2">
+                    <h2 class="font-display font-extrabold text-2xl sm:text-3xl text-rose-300">Out of Lives!</h2>
+                    <p class="text-xs sm:text-sm text-slate-300">Great effort! You've expanded your pride flag knowledge.</p>
+                </div>
+
+                <!-- Final Stats Summary -->
+                <div class="grid grid-cols-3 gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 text-center">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Final Score</div>
+                        <div id="finalScore" class="font-display font-extrabold text-xl text-emerald-400">0</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Best Streak</div>
+                        <div id="finalStreak" class="font-display font-extrabold text-xl text-amber-400">0</div>
+                    </div>
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Flags Solved</div>
+                        <div id="finalQuestions" class="font-display font-extrabold text-xl text-purple-400">0</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button onclick="startGame()" class="flex-1 py-3 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white font-extrabold text-sm shadow-lg hover:opacity-95 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-rotate-right"></i> Play Again
+                    </button>
+                    <button onclick="switchMode('explore')" class="py-3 px-6 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs sm:text-sm border border-slate-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-book-open"></i> Review Flags
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: FLAG EXPLORER GUIDE -->
+        <section id="exploreView" class="hidden space-y-6">
+            <div class="glass-panel rounded-2xl p-6 space-y-2">
+                <h2 class="font-display font-extrabold text-2xl gradient-text">Pride Flag Explorer</h2>
+                <p class="text-xs sm:text-sm text-slate-300">
+                    Tap on any flag below to learn its history, creator, and the meaning behind each color stripe!
+                </p>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div id="exploreGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <!-- Populated by JavaScript -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+    <script>
+        const FLAGS_DATABASE = [
+            {
+                id: "progress",
+                name: "Progress Pride Flag",
+                year: "2018",
+                creator: "Daniel Quasar",
+                description: "Designed in 2018, this flag adds a chevron on the left with black and brown stripes (representing LGBTQ+ people of color and those living with HIV/AIDS) alongside pink, light blue, and white stripes from the Transgender flag.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="30" fill="#E50000"/>
+                        <rect y="30" width="300" height="30" fill="#FF8D00"/>
+                        <rect y="60" width="300" height="30" fill="#FFEE00"/>
+                        <rect y="90" width="300" height="30" fill="#008121"/>
+                        <rect y="120" width="300" height="30" fill="#004CFF"/>
+                        <rect y="150" width="300" height="30" fill="#760089"/>
+                        <polygon points="0,0 120,90 0,180" fill="#000000"/>
+                        <polygon points="0,0 100,90 0,180" fill="#613915"/>
+                        <polygon points="0,0 80,90 0,180" fill="#73D7EE"/>
+                        <polygon points="0,0 60,90 0,180" fill="#FFAFC8"/>
+                        <polygon points="0,0 40,90 0,180" fill="#FFFFFF"/>
+                    </svg>
+                `
+            },
+            {
+                id: "intersex_progress",
+                name: "Intersex-Inclusive Progress Flag",
+                year: "2021",
+                creator: "Valentino Vecchietti",
+                description: "Created in 2021 by Valentino Vecchietti of Intersex Equality Rights UK. It incorporates the Intersex flag (a purple circle inside a yellow triangle) into the chevron of Daniel Quasar's Progress Pride design.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="30" fill="#E50000"/>
+                        <rect y="30" width="300" height="30" fill="#FF8D00"/>
+                        <rect y="60" width="300" height="30" fill="#FFEE00"/>
+                        <rect y="90" width="300" height="30" fill="#008121"/>
+                        <rect y="120" width="300" height="30" fill="#004CFF"/>
+                        <rect y="150" width="300" height="30" fill="#760089"/>
+                        <polygon points="0,0 145,90 0,180" fill="#000000"/>
+                        <polygon points="0,0 125,90 0,180" fill="#613915"/>
+                        <polygon points="0,0 105,90 0,180" fill="#73D7EE"/>
+                        <polygon points="0,0 85,90 0,180" fill="#FFAFC8"/>
+                        <polygon points="0,0 65,90 0,180" fill="#FFFFFF"/>
+                        <polygon points="0,0 45,90 0,180" fill="#FFDA00"/>
+                        <circle cx="16" cy="90" r="11" fill="none" stroke="#7A00AC" stroke-width="4.5"/>
+                    </svg>
+                `
+            },
+            {
+                id: "rainbow",
+                name: "Rainbow Pride Flag",
+                year: "1978 / 1979",
+                creator: "Gilbert Baker",
+                description: "Originally created by Gilbert Baker for San Francisco Gay Freedom Day in 1978. The popular 6-stripe version features Red (Life), Orange (Healing), Yellow (Sunlight), Green (Nature), Blue (Serenity), and Violet (Spirit).",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="30" fill="#E50000"/>
+                        <rect y="30" width="300" height="30" fill="#FF8D00"/>
+                        <rect y="60" width="300" height="30" fill="#FFEE00"/>
+                        <rect y="90" width="300" height="30" fill="#008121"/>
+                        <rect y="120" width="300" height="30" fill="#004CFF"/>
+                        <rect y="150" width="300" height="30" fill="#760089"/>
+                    </svg>
+                `
+            },
+            {
+                id: "philly_rainbow",
+                name: "Philadelphia Pride Flag",
+                year: "2017",
+                creator: "Tierney Engel & More Color More Pride",
+                description: "Unveiled at Philadelphia City Hall in 2017 to explicitly include and honor LGBTQ+ Black, Indigenous, and people of color with top black and brown stripes.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="22.5" fill="#000000"/>
+                        <rect y="22.5" width="300" height="22.5" fill="#784212"/>
+                        <rect y="45" width="300" height="22.5" fill="#E50000"/>
+                        <rect y="67.5" width="300" height="22.5" fill="#FF8D00"/>
+                        <rect y="90" width="300" height="22.5" fill="#FFEE00"/>
+                        <rect y="112.5" width="300" height="22.5" fill="#008121"/>
+                        <rect y="135" width="300" height="22.5" fill="#004CFF"/>
+                        <rect y="157.5" width="300" height="22.5" fill="#760089"/>
+                    </svg>
+                `
+            },
+            {
+                id: "trans",
+                name: "Transgender Flag",
+                year: "1999",
+                creator: "Monica Helms",
+                description: "Created by trans woman Monica Helms in 1999. Light blue represents traditional baby boy colors, light pink represents baby girl colors, and white represents those who are transitioning, non-binary, or intersex.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="36" fill="#5BCEFA"/>
+                        <rect y="36" width="300" height="36" fill="#F5A9B8"/>
+                        <rect y="72" width="300" height="36" fill="#FFFFFF"/>
+                        <rect y="108" width="300" height="36" fill="#F5A9B8"/>
+                        <rect y="144" width="300" height="36" fill="#5BCEFA"/>
+                    </svg>
+                `
+            },
+            {
+                id: "nonbinary",
+                name: "Non-Binary Flag",
+                year: "2014",
+                creator: "Kye Rowan",
+                description: "Designed in 2014 by 17-year-old Kye Rowan. Yellow represents gender outside the binary, White represents people of many/all genders, Purple represents a mix of binary genders, and Black represents agender individuals.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="45" fill="#FFF430"/>
+                        <rect y="45" width="300" height="45" fill="#FFFFFF"/>
+                        <rect y="90" width="300" height="45" fill="#9C59D1"/>
+                        <rect y="135" width="300" height="45" fill="#2C2C2C"/>
+                    </svg>
+                `
+            },
+            {
+                id: "agender",
+                name: "Agender Flag",
+                year: "2014",
+                creator: "Salem X (Salem-ofo)",
+                description: "Created in 2014 by Salem X. Black and White represent the absence of gender, Grey represents semi-genders, and Green represents non-binary genders.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="25.7" fill="#000000"/>
+                        <rect y="25.7" width="300" height="25.7" fill="#B9B9B9"/>
+                        <rect y="51.4" width="300" height="25.7" fill="#FFFFFF"/>
+                        <rect y="77.1" width="300" height="25.7" fill="#B5E95A"/>
+                        <rect y="102.8" width="300" height="25.7" fill="#FFFFFF"/>
+                        <rect y="128.5" width="300" height="25.7" fill="#B9B9B9"/>
+                        <rect y="154.2" width="300" height="25.7" fill="#000000"/>
+                    </svg>
+                `
+            },
+            {
+                id: "bisexual",
+                name: "Bisexual Flag",
+                year: "1998",
+                creator: "Michael Page",
+                description: "Designed by Michael Page in 1998 to raise visibility for bisexual people. Pink/Magenta represents attraction to the same gender (40%), Royal Blue represents attraction to different genders (40%), and Purple represents attraction across the spectrum (20%).",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="72" fill="#D60270"/>
+                        <rect y="72" width="300" height="36" fill="#9B4F96"/>
+                        <rect y="108" width="300" height="72" fill="#0038A8"/>
+                    </svg>
+                `
+            },
+            {
+                id: "lesbian",
+                name: "Sunset Lesbian Flag",
+                year: "2018",
+                creator: "Emily Gwen",
+                description: "Designed by Emily Gwen in 2018. Dark Orange represents gender non-conformity, Orange represents independence, Light Orange for community, White for unique relationships to womanhood, Pink for serenity, and Dark Rose for love.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="36" fill="#D52D00"/>
+                        <rect y="36" width="300" height="36" fill="#EF7627"/>
+                        <rect y="72" width="300" height="36" fill="#FFFFFF"/>
+                        <rect y="108" width="300" height="36" fill="#B75592"/>
+                        <rect y="144" width="300" height="36" fill="#A30062"/>
+                    </svg>
+                `
+            },
+            {
+                id: "pansexual",
+                name: "Pansexual Flag",
+                year: "2010",
+                creator: "Online Community",
+                description: "Created in 2010 to symbolize attraction regardless of gender identity. Pink represents attraction to women, Yellow represents attraction to non-binary/agender folks, and Cyan/Blue represents attraction to men.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="60" fill="#FF218C"/>
+                        <rect y="60" width="300" height="60" fill="#FFD800"/>
+                        <rect y="120" width="300" height="60" fill="#00B4FF"/>
+                    </svg>
+                `
+            },
+            {
+                id: "polysexual",
+                name: "Polysexual Flag",
+                year: "2012",
+                creator: "Samlin (Tumblr)",
+                description: "Created in 2012. Pink represents attraction to women, Green represents attraction to non-binary people, and Blue represents attraction to men.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="60" fill="#F61CB9"/>
+                        <rect y="60" width="300" height="60" fill="#07D569"/>
+                        <rect y="120" width="300" height="60" fill="#1C92F6"/>
+                    </svg>
+                `
+            },
+            {
+                id: "omnisexual",
+                name: "Omnisexual Flag",
+                year: "2015",
+                creator: "@nonbinary-pastell",
+                description: "Designed in 2015 for individuals attracted to people of all genders, with gender playing a role in their attraction. Light Pink, Pink, Dark Purple, Blue, and Light Blue.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="36" fill="#FE9ACE"/>
+                        <rect y="36" width="300" height="36" fill="#FF52B1"/>
+                        <rect y="72" width="300" height="36" fill="#20002C"/>
+                        <rect y="108" width="300" height="36" fill="#67A3FF"/>
+                        <rect y="144" width="300" height="36" fill="#8DAEFF"/>
+                    </svg>
+                `
+            },
+            {
+                id: "abrosexual",
+                name: "Abrosexual Flag",
+                year: "2015",
+                creator: "Online Community",
+                description: "Created to represent abrosexuality, where sexual orientation is fluid and changeable over time. The green-to-pink gradient colors represent fluid attraction.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="36" fill="#74CA92"/>
+                        <rect y="36" width="300" height="36" fill="#B0E3C2"/>
+                        <rect y="72" width="300" height="36" fill="#FFFFFF"/>
+                        <rect y="108" width="300" height="36" fill="#F5B7B1"/>
+                        <rect y="144" width="300" height="36" fill="#E75480"/>
+                    </svg>
+                `
+            },
+            {
+                id: "asexual",
+                name: "Asexual Flag",
+                year: "2010",
+                creator: "AVEN Community",
+                description: "Created in 2010 by AVEN community consensus. Black represents asexuality, Grey represents demisexuality & grey-asexuality, White represents allies, and Purple represents community.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="45" fill="#000000"/>
+                        <rect y="45" width="300" height="45" fill="#A3A3A3"/>
+                        <rect y="90" width="300" height="45" fill="#FFFFFF"/>
+                        <rect y="135" width="300" height="45" fill="#800080"/>
+                    </svg>
+                `
+            },
+            {
+                id: "demisexual",
+                name: "Demisexual Flag",
+                year: "2010",
+                creator: "AVEN Community",
+                description: "Represents demisexual individuals who experience sexual attraction only after forming a strong emotional bond. Features a black chevron alongside white, purple, and grey stripes.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="60" fill="#FFFFFF"/>
+                        <rect y="60" width="300" height="60" fill="#800080"/>
+                        <rect y="120" width="300" height="60" fill="#A3A3A3"/>
+                        <polygon points="0,0 100,90 0,180" fill="#000000"/>
+                    </svg>
+                `
+            },
+            {
+                id: "intersex",
+                name: "Intersex Flag",
+                year: "2013",
+                creator: "Morgan Carpenter",
+                description: "Created in 2013 by Morgan Carpenter of Intersex Human Rights Australia. Yellow and Purple were chosen because they are non-gendered colors, and the unbroken circle symbolizes wholeness and autonomy.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect width="300" height="180" fill="#FFDA00"/>
+                        <circle cx="150" cy="90" r="45" fill="none" stroke="#7A00AC" stroke-width="12"/>
+                    </svg>
+                `
+            },
+            {
+                id: "genderqueer",
+                name: "Genderqueer Flag",
+                year: "2011",
+                creator: "Marilyn Roxie",
+                description: "Designed in 2011 by Marilyn Roxie. Lavender (mix of blue and pink) represents androgyny, White represents agender identity, and Dark Green represents non-binary genders.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="60" fill="#B57EDC"/>
+                        <rect y="60" width="300" height="60" fill="#FFFFFF"/>
+                        <rect y="120" width="300" height="60" fill="#4A8123"/>
+                    </svg>
+                `
+            },
+            {
+                id: "genderfluid",
+                name: "Genderfluid Flag",
+                year: "2012",
+                creator: "JJ Poole",
+                description: "Created in 2012 by JJ Poole. Pink represents femininity, White represents all genders, Purple represents combination of masculinity & femininity, Black represents lack of gender, and Blue represents masculinity.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="36" fill="#FF76A4"/>
+                        <rect y="36" width="300" height="36" fill="#FFFFFF"/>
+                        <rect y="72" width="300" height="36" fill="#C011D7"/>
+                        <rect y="108" width="300" height="36" fill="#000000"/>
+                        <rect y="144" width="300" height="36" fill="#2C30B4"/>
+                    </svg>
+                `
+            },
+            {
+                id: "aromantic",
+                name: "Aromantic Flag",
+                year: "2014",
+                creator: "Cameron Whimsical",
+                description: "Designed in 2014. Dark & Light Green represent the aromantic spectrum (green being the opposite of red, the traditional color of romantic love), White represents platonic relationships, and Grey/Black represent the sexuality spectrum.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="36" fill="#3BA740"/>
+                        <rect y="36" width="300" height="36" fill="#A8D47A"/>
+                        <rect y="72" width="300" height="36" fill="#FFFFFF"/>
+                        <rect y="108" width="300" height="36" fill="#ABABAB"/>
+                        <rect y="144" width="300" height="36" fill="#000000"/>
+                    </svg>
+                `
+            },
+            {
+                id: "sapphic",
+                name: "Sapphic Flag",
+                year: "2015",
+                creator: "Lesbian-Herstory (Tumblr)",
+                description: "Represents women and non-binary people attracted to women (sapphic love). Pink outer stripes represent warmth, with a white center stripe bearing double violet flowers.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="50" fill="#FF94CA"/>
+                        <rect y="50" width="300" height="80" fill="#FFFFFF"/>
+                        <rect y="130" width="300" height="50" fill="#FF94CA"/>
+                        <circle cx="150" cy="90" r="16" fill="#A855F7" opacity="0.85"/>
+                        <circle cx="138" cy="90" r="10" fill="#C084FC" opacity="0.85"/>
+                        <circle cx="162" cy="90" r="10" fill="#C084FC" opacity="0.85"/>
+                    </svg>
+                `
+            },
+            {
+                id: "achillean",
+                name: "Achillean Flag",
+                year: "2016",
+                creator: "Prins-of-paws (Tumblr)",
+                description: "Represents men and non-binary people attracted to men (achillean love). Light blue top and bottom stripes with a white center stripe containing a green carnation emblem.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="50" fill="#90E0EF"/>
+                        <rect y="50" width="300" height="80" fill="#FFFFFF"/>
+                        <rect y="130" width="300" height="50" fill="#90E0EF"/>
+                        <circle cx="150" cy="90" r="16" fill="#2E7D32" opacity="0.85"/>
+                        <path d="M150 70 Q145 85 150 110 Q155 85 150 70 Z" fill="#4CAF50"/>
+                    </svg>
+                `
+            },
+            {
+                id: "bear",
+                name: "International Bear Brotherhood Flag",
+                year: "1995",
+                creator: "Craig Byrnes",
+                description: "Created in 1995 to represent the bear subculture within the LGBTQ+ community. The stripes represent the skin/fur colors of bears around the world.",
+                render: () => `
+                    <svg viewBox="0 0 300 180" class="w-full h-full rounded-xl">
+                        <rect y="0" width="300" height="25.7" fill="#623804"/>
+                        <rect y="25.7" width="300" height="25.7" fill="#D56300"/>
+                        <rect y="51.4" width="300" height="25.7" fill="#FEDD63"/>
+                        <rect y="77.1" width="300" height="25.7" fill="#FEEAA5"/>
+                        <rect y="102.8" width="300" height="25.7" fill="#FFFFFF"/>
+                        <rect y="128.5" width="300" height="25.7" fill="#8B8B8B"/>
+                        <rect y="154.2" width="300" height="25.7" fill="#000000"/>
+                        <circle cx="45" cy="35" r="7" fill="#000000"/>
+                        <circle cx="35" cy="48" r="5" fill="#000000"/>
+                        <circle cx="55" cy="48" r="5" fill="#000000"/>
+                        <ellipse cx="45" cy="60" rx="10" ry="8" fill="#000000"/>
+                    </svg>
+                `
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let currentFlag = null;
+        let score = 0;
+        let streak = 0;
+        let bestStreak = 0;
+        let lives = 3;
+        let highScore = parseInt(localStorage.getItem('pride_quiz_highscore') || '0');
+        let isAnswered = false;
+
+        document.getElementById('highScoreDisplay').innerText = highScore;
+
+        function updateLivesDisplay() {
+            const container = document.getElementById('livesDisplay');
+            container.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < lives) {
+                    container.innerHTML += `<i class="fa-solid fa-heart text-rose-500 animate-pulse"></i>`;
+                } else {
+                    container.innerHTML += `<i class="fa-solid fa-heart-crack text-slate-700 opacity-60"></i>`;
+                }
+            }
+        }
+
+        function playTone(freq, duration, type='sine') {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        function playSound(effect) {
+            if (effect === 'correct') {
+                playTone(523.25, 0.12); // C5
+                setTimeout(() => playTone(659.25, 0.2), 100); // E5
+            } else if (effect === 'wrong') {
+                playTone(220, 0.25, 'sawtooth');
+            } else if (effect === 'click') {
+                playTone(440, 0.05);
+            } else if (effect === 'gameover') {
+                playTone(180, 0.3, 'sawtooth');
+                setTimeout(() => playTone(130, 0.5, 'sawtooth'), 200);
+            }
+        }
+
+        function switchMode(mode) {
+            playSound('click');
+            const introView = document.getElementById('introView');
+            const quizView = document.getElementById('quizView');
+            const exploreView = document.getElementById('exploreView');
+            
+            const homeBtn = document.getElementById('navHomeBtn');
+            const quizBtn = document.getElementById('navQuizBtn');
+            const exploreBtn = document.getElementById('navExploreBtn');
+
+            const activeStyle = "px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-purple-600 text-white shadow-lg transition";
+            const inactiveStyle = "px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition";
+
+            introView.classList.add('hidden');
+            quizView.classList.add('hidden');
+            exploreView.classList.add('hidden');
+
+            homeBtn.className = inactiveStyle;
+            quizBtn.className = inactiveStyle;
+            exploreBtn.className = inactiveStyle;
+
+            if (mode === 'intro') {
+                introView.classList.remove('hidden');
+                homeBtn.className = activeStyle;
+            } else if (mode === 'quiz') {
+                quizView.classList.remove('hidden');
+                quizBtn.className = activeStyle;
+            } else if (mode === 'explore') {
+                exploreView.classList.remove('hidden');
+                exploreBtn.className = activeStyle;
+                renderExplorerGallery();
+            }
+        }
+
+        function startGame() {
+            switchMode('quiz');
+            score = 0;
+            streak = 0;
+            bestStreak = 0;
+            lives = 3;
+            currentQuestionIndex = 0;
+
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('streakDisplay').innerText = streak;
+            updateLivesDisplay();
+
+            document.getElementById('quizMainCard').classList.remove('hidden');
+            document.getElementById('gameOverCard').classList.add('hidden');
+
+            generateQuestion();
+        }
+
+        function triggerQuickExit() {
+            window.location.href = "https://www.google.com";
+        }
+
+        function generateQuestion() {
+            isAnswered = false;
+            document.getElementById('factBox').classList.add('hidden');
+            
+            // Pick a random flag
+            const randomIndex = Math.floor(Math.random() * FLAGS_DATABASE.length);
+            currentFlag = FLAGS_DATABASE[randomIndex];
+            currentQuestionIndex++;
+
+            document.getElementById('questionTag').innerText = `Flag Challenge #${currentQuestionIndex}`;
+            document.getElementById('flagContainer').innerHTML = currentFlag.render();
+
+            // Shuffle choices
+            const wrongOptions = FLAGS_DATABASE.filter(f => f.id !== currentFlag.id);
+            const shuffledWrong = wrongOptions.sort(() => 0.5 - Math.random()).slice(0, 3);
+            const allChoices = [currentFlag, ...shuffledWrong].sort(() => 0.5 - Math.random());
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+
+            allChoices.forEach(flagChoice => {
+                const btn = document.createElement('button');
+                btn.className = "p-4 rounded-2xl bg-slate-800/90 border border-slate-700/80 hover:border-purple-500/80 text-left text-xs sm:text-sm font-bold text-slate-200 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-between";
+                btn.innerHTML = `<span>${flagChoice.name}</span> <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>`;
+                btn.onclick = () => handleChoice(flagChoice, btn);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function handleChoice(selectedFlag, btnElement) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const buttons = document.getElementById('optionsGrid').children;
+
+            if (selectedFlag.id === currentFlag.id) {
+                // Correct answer
+                playSound('correct');
+                btnElement.className = "p-4 rounded-2xl bg-emerald-950/90 border-2 border-emerald-500 text-left text-xs sm:text-sm font-bold text-emerald-200 flex items-center justify-between";
+                btnElement.innerHTML = `<span>${selectedFlag.name}</span> <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>`;
+
+                streak++;
+                if (streak > bestStreak) bestStreak = streak;
+                score += 100 + (streak * 20);
+                
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('pride_quiz_highscore', highScore.toString());
+                    document.getElementById('highScoreDisplay').innerText = highScore;
+                }
+
+                if (streak >= 3) {
+                    triggerConfetti();
+                }
+            } else {
+                // Incorrect answer
+                playSound('wrong');
+                btnElement.className = "p-4 rounded-2xl bg-rose-950/90 border-2 border-rose-500 text-left text-xs sm:text-sm font-bold text-rose-200 flex items-center justify-between";
+                btnElement.innerHTML = `<span>${selectedFlag.name}</span> <i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>`;
+
+                // Highlight correct button
+                Array.from(buttons).forEach(b => {
+                    if (b.innerText.includes(currentFlag.name)) {
+                        b.className = "p-4 rounded-2xl bg-emerald-950/90 border-2 border-emerald-500 text-left text-xs sm:text-sm font-bold text-emerald-200 flex items-center justify-between";
+                    }
+                });
+
+                streak = 0;
+                lives--;
+                updateLivesDisplay();
+            }
+
+            document.getElementById('scoreDisplay').innerText = score;
+            document.getElementById('streakDisplay').innerText = streak;
+
+            // Show educational fact box
+            document.getElementById('factTitle').innerText = `${currentFlag.name} (${currentFlag.creator || 'Community'})`;
+            document.getElementById('factYear').innerText = `Created: ${currentFlag.year}`;
+            document.getElementById('factDescription').innerText = currentFlag.description;
+            document.getElementById('factBox').classList.remove('hidden');
+
+            // Handle game over if lives ran out
+            if (lives <= 0) {
+                const nextBtn = document.querySelector('#factBox button');
+                nextBtn.innerHTML = `View Results <i class="fa-solid fa-trophy ml-1"></i>`;
+                nextBtn.onclick = triggerGameOver;
+            } else {
+                const nextBtn = document.querySelector('#factBox button');
+                nextBtn.innerHTML = `Next Flag <i class="fa-solid fa-arrow-right ml-1"></i>`;
+                nextBtn.onclick = nextQuestion;
+            }
+        }
+
+        function triggerGameOver() {
+            playSound('gameover');
+            document.getElementById('quizMainCard').classList.add('hidden');
+            document.getElementById('gameOverCard').classList.remove('hidden');
+
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('finalStreak').innerText = bestStreak;
+            document.getElementById('finalQuestions').innerText = currentQuestionIndex;
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            generateQuestion();
+        }
+
+        function renderExplorerGallery() {
+            const grid = document.getElementById('exploreGrid');
+            grid.innerHTML = '';
+
+            FLAGS_DATABASE.forEach(flag => {
+                const card = document.createElement('div');
+                card.className = "glass-panel rounded-2xl p-4 space-y-3 border border-slate-700/60 hover:border-purple-500/60 transition cursor-pointer";
+                card.innerHTML = `
+                    <div class="h-32 rounded-xl overflow-hidden border border-slate-700/50 bg-slate-900 flex items-center justify-center p-1">
+                        ${flag.render()}
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-display font-bold text-slate-100 text-sm">${flag.name}</h3>
+                            <span class="text-[10px] bg-purple-950 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded">${flag.year}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed line-clamp-3">${flag.description}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function triggerConfetti() {
+            const canvas = document.getElementById('confettiCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#FF007F', '#FF7043', '#FFEA00', '#00E676', '#00D2FF', '#8A2BE2'];
+
+            for (let i = 0; i < 60; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 12,
+                    vy: (Math.random() - 0.7) * 12,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 6 + 4,
+                    life: 100
+                });
+            }
+
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+
+                particles.forEach(p => {
+                    if (p.life > 0) {
+                        alive = true;
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.2; // gravity
+                        p.life -= 1.5;
+
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+
+                if (alive) {
+                    requestAnimationFrame(animateConfetti);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            animateConfetti();
+        }
+
+        window.onload = function() {
+            switchMode('intro');
+        };
+    </script>
+</body>
+</html>
