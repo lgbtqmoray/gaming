@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>LGBTQ Moray - Gaming Hub</title>
+    <meta name="description" content="Inclusive LGBTQ+ arcade and educational games for youth by LGBTQ Moray.">
+    <link rel="canonical" href="https://gaming.lgbtqmoray.co.uk/">
+
+    <!-- Open Graph / Social Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="LGBTQ Moray Gaming Hub">
+    <meta property="og:title" content="LGBTQ Moray - Gaming Hub">
+    <meta property="og:description" content="Inclusive LGBTQ+ arcade and educational games for youth by LGBTQ Moray.">
+    <meta property="og:url" content="https://gaming.lgbtqmoray.co.uk/">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -317,7 +326,7 @@
                     SELECT A GAME
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
-                    Choose from our collection of LGBTQ+ games—ranging from flag identification quizzes and retro runners to platformers and collector games!
+                    Choose from our collection of inclusive LGBTQ+ arcade games—collect flags in the sky or grow a living Pride tapestry in Snake!
                 </p>
             </div>
 
@@ -343,59 +352,33 @@
                     </button>
                 </div>
 
-                <!-- Game 2: Spectrum Leap Platformer -->
-                <div class="glass-panel rounded-2xl p-5 border border-cyan-500/30 hover:border-cyan-500/80 transition flex flex-col justify-between space-y-4 group">
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl font-bold">
-                                <i class="fa-solid fa-person-running"></i>
-                            </span>
-                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30">2D PLATFORMER</span>
-                        </div>
-                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-cyan-300 transition">Spectrum Leap</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Double jump, wall slide, and rainbow dash through synthwave levels to collect crystals and rescue friends.
-                        </p>
-                    </div>
-                    <button onclick="launchSpecificGame('platformer')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-cyan-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
-                        PLAY GAME <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-
-                <!-- Game 3: Prism Dash Arcade -->
-                <div class="glass-panel rounded-2xl p-5 border border-purple-500/30 hover:border-purple-500/80 transition flex flex-col justify-between space-y-4 group">
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl font-bold">
-                                <i class="fa-solid fa-bolt"></i>
-                            </span>
-                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-500/30">SPACE RUNNER</span>
-                        </div>
-                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-purple-300 transition">Prism Dash</h3>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Pilot a synthwave Pride Starship down neon space lanes, blasting dark void asteroids with your rainbow laser.
-                        </p>
-                    </div>
-                    <button onclick="launchSpecificGame('runner')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-purple-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
-                        PLAY GAME <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-
-                <!-- Game 4: Pride Flag Quest Quiz -->
+                <!-- Game 2: Pride Flag Snake -->
                 <div class="glass-panel rounded-2xl p-5 border border-emerald-500/30 hover:border-emerald-500/80 transition flex flex-col justify-between space-y-4 group">
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
-                            <span class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
-                                <i class="fa-solid fa-graduation-cap"></i>
+                            <span class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center p-2">
+                                <svg viewBox="0 0 60 36" class="w-full h-auto rounded-[2px] border border-white/30" role="img" aria-label="Progress Pride Flag">
+                                    <rect x="0" y="0" width="60" height="6" fill="#E40303" />
+                                    <rect x="0" y="6" width="60" height="6" fill="#FF8C00" />
+                                    <rect x="0" y="12" width="60" height="6" fill="#FFED00" />
+                                    <rect x="0" y="18" width="60" height="6" fill="#008026" />
+                                    <rect x="0" y="24" width="60" height="6" fill="#24408E" />
+                                    <rect x="0" y="30" width="60" height="6" fill="#732982" />
+                                    <polygon points="0,0 28,18 0,36" fill="#000000" />
+                                    <polygon points="0,0 23,18 0,36" fill="#784F17" />
+                                    <polygon points="0,0 18,18 0,36" fill="#5BCEFA" />
+                                    <polygon points="0,0 13,18 0,36" fill="#F5A9B8" />
+                                    <polygon points="0,0 8,18 0,36" fill="#FFFFFF" />
+                                </svg>
                             </span>
-                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30">QUIZ & EXPLORER</span>
+                            <span class="text-[10px] font-arcade font-bold px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/30">CLASSIC ARCADE</span>
                         </div>
-                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-emerald-300 transition">Pride Flag Quest</h3>
+                        <h3 class="font-arcade font-bold text-base text-slate-100 group-hover:text-emerald-300 transition">Pride Flag Snake</h3>
                         <p class="text-xs text-slate-300 leading-relaxed">
-                            Test your knowledge identifying pride flags and explore the interactive guide to learn history & meanings.
+                            Guide your snake across the neon grid to collect LGBTQ+ flags and grow into a living Pride tapestry!
                         </p>
                     </div>
-                    <button onclick="launchSpecificGame('quiz')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
+                    <button onclick="launchSpecificGame('snake')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white font-arcade font-bold text-xs transition border border-slate-700 flex items-center justify-center gap-2">
                         PLAY GAME <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
@@ -485,10 +468,8 @@
 
         function launchSpecificGame(gameKey) {
             playSound('click');
-            if (gameKey === 'collector') window.location.href = 'pride_flag_collector.html';
-            else if (gameKey === 'platformer') window.location.href = 'spectrum_leap.html';
-            else if (gameKey === 'runner') window.location.href = 'prism_dash.html';
-            else if (gameKey === 'quiz') window.location.href = 'flag_quiz.html';
+            if (gameKey === 'collector') window.location.href = 'flagcollector.html';
+            else if (gameKey === 'snake') window.location.href = 'pride_flag_snake.html';
         }
 
         // 3D Mouse Tilt & Spark Burst Effects for Logo Card
