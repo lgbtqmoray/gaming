@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pride Flag Collector: Real vs Impostor</title>
+    <link rel="canonical" href="https://gaming.lgbtqmoray.co.uk/flagcollector.html">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -85,38 +86,47 @@
 </head>
 <body class="h-full flex flex-col font-sans text-slate-100 antialiased select-none">
 
-    <header class="z-30 glass-panel border-b border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between shrink-0">
-        <!-- Brand & Title -->
-        <div class="flex items-center gap-3 cursor-pointer" onclick="returnToMenu()">
-            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-cyan-400 flex items-center justify-center text-white text-lg font-black shadow-lg shadow-purple-500/30">
-                <i class="fa-solid fa-flag"></i>
-            </div>
-            <div>
-                <h1 class="font-arcade font-bold text-base sm:text-lg tracking-wider gradient-text">PRIDE FLAG COLLECTOR</h1>
-                <p class="text-[10px] sm:text-xs text-slate-400 font-semibold tracking-wide">Real Pride vs Decoy Flags</p>
+    <header class="z-30 glass-panel border-b border-slate-800 px-2.5 sm:px-5 py-2.5 flex items-center justify-between shrink-0 gap-2">
+        <!-- Left Group: Back to Gaming Hub + Brand & Title -->
+        <div class="flex items-center gap-2 sm:gap-3.5 shrink-0">
+            <a href="index.html" onclick="if(window.location.protocol === 'about:' || window.location.href.includes('googleusercontent')) { window.location.href = 'https://gaming.lgbtqmoray.co.uk/'; return false; }" class="px-2.5 py-1.5 rounded-xl bg-slate-800/95 hover:bg-purple-950/80 border border-slate-700 hover:border-purple-500/60 text-slate-100 hover:text-purple-200 text-[11px] sm:text-xs font-bold transition flex items-center gap-1.5 shrink-0 whitespace-nowrap shadow-md" title="Return to LGBTQ Moray Gaming Hub">
+                <i class="fa-solid fa-arrow-left text-cyan-400"></i>
+                <span>Back to Gaming Hub</span>
+            </a>
+
+            <div class="h-6 w-px bg-slate-800 hidden md:block shrink-0"></div>
+
+            <div class="flex items-center gap-2 sm:gap-2.5 cursor-pointer shrink-0" onclick="returnToMenu()">
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-cyan-400 flex items-center justify-center text-white text-sm sm:text-base font-black shadow-lg shadow-purple-500/30 shrink-0">
+                    <i class="fa-solid fa-flag"></i>
+                </div>
+                <div>
+                    <h1 class="font-arcade font-bold text-xs sm:text-sm md:text-base tracking-normal sm:tracking-wider gradient-text whitespace-nowrap">PRIDE FLAG COLLECTOR</h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400 font-semibold tracking-wide whitespace-nowrap">Real Pride vs Decoy Flags</p>
+                </div>
             </div>
         </div>
 
         <!-- Controls & Sound Action -->
-        <div class="flex items-center gap-2 sm:gap-3">
-            <button id="customizerBtnHeader" onclick="openCustomizerModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5" title="Customize Paddle Skin">
+        <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            <button id="customizerBtnHeader" onclick="openCustomizerModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap" title="Customize Paddle Skin">
                 <i class="fa-solid fa-palette text-pink-400"></i>
-                <span class="hidden sm:inline">Paddle Skin</span>
+                <span class="hidden lg:inline">Paddle Skin</span>
             </button>
 
-            <button id="codexBtnHeader" onclick="openCodexModal()" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5">
+            <button id="codexBtnHeader" onclick="openCodexModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
                 <i class="fa-solid fa-book-open text-purple-400"></i>
-                <span class="hidden sm:inline">Flag Codex</span>
+                <span class="hidden lg:inline">Flag Codex</span>
             </button>
             
-            <button id="audioToggleBtn" onclick="toggleAudio()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-center transition" title="Toggle Sound">
+            <button id="audioToggleBtn" onclick="toggleAudio()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 flex items-center justify-center transition shrink-0" title="Toggle Sound">
                 <i id="audioIcon" class="fa-solid fa-volume-high text-xs"></i>
             </button>
 
             <!-- Quick Safe Exit -->
-            <button onclick="triggerQuickExit()" title="Quick Safe Exit" class="px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-600/50 text-rose-200 text-xs font-bold transition flex items-center gap-1.5">
+            <button onclick="triggerQuickExit()" title="Quick Safe Exit" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-600/50 text-rose-200 text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
                 <i class="fa-solid fa-person-running"></i>
-                <span class="hidden sm:inline">Quick Exit</span>
+                <span class="hidden md:inline">Quick Exit</span>
             </button>
         </div>
     </header>
@@ -270,7 +280,27 @@
     </main>
 
     <div id="codexModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-        <!-- ... existing codex modal code ... -->
+        <div class="glass-panel rounded-3xl p-6 max-w-2xl w-full border border-slate-700 space-y-4 max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                <h3 class="font-arcade font-bold text-base text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-purple-400"></i> PRIDE FLAG CODEX
+                </h3>
+                <button onclick="closeCodexModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto space-y-4 pr-1">
+                <div>
+                    <h4 class="font-arcade font-bold text-xs text-emerald-400 mb-2">AUTHENTIC PRIDE FLAGS (COLLECT)</h4>
+                    <div id="realFlagsCodexGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+                </div>
+                <div>
+                    <h4 class="font-arcade font-bold text-xs text-rose-400 mb-2">DECOY & COUNTRY FLAGS (AVOID)</h4>
+                    <div id="decoyFlagsCodexGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+                </div>
+            </div>
+            <button onclick="closeCodexModal()" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-arcade font-bold text-xs">
+                CLOSE CODEX
+            </button>
+        </div>
     </div>
 
     <div id="customizerModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
@@ -1012,4 +1042,3 @@
     </script>
 </body>
 </html>
-
