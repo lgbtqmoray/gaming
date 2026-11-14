@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Pride Flag Snake | LGBTQ Moray Gaming Hub</title>
+  <style>
+    /* ==========================================================================
+       CSS VARIABLES & THEME TOKENS (LGBTQ MORAY GAMING HUB)
+       ========================================================================== */
+    :root {
+      --bg-deep: #090d16;
+      --bg-slate: #0f172a;
+      --surface-glass: rgba(15, 23, 42, 0.85);
+      --surface-card: rgba(30, 41, 59, 0.85);
+      --surface-card-hover: rgba(51, 65, 85, 0.95);
+      --border-glass: rgba(255, 255, 255, 0.14);
+      --border-focus: #38bdf8;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+
+      --pride-red: #ff3b5c;
+      --pride-orange: #ff8c24;
+      --pride-yellow: #ffd60a;
+      --pride-green: #10b981;
+      --pride-blue: #3b82f6;
+      --pride-violet: #a855f7;
+      --trans-blue: #5bcefa;
+      --trans-pink: #f5a9b8;
+
+      --pride-gradient: linear-gradient(
+        90deg,
+        var(--pride-red),
+        var(--pride-orange),
+        var(--pride-yellow),
+        var(--pride-green),
+        var(--pride-blue),
+        var(--pride-violet)
+      );
+
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-deep);
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(168, 85, 247, 0.15), transparent 38%),
+        radial-gradient(circle at 88% 18%, rgba(56, 189, 248, 0.14), transparent 38%),
+        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-slate) 100%);
+      color: var(--text-primary);
+      line-height: 1.45;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--border-focus);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* ==========================================================================
+       TOP PRIDE RIBBON & HEADER BAR
+       ========================================================================== */
+    .pride-top-ribbon {
+      height: 5px;
+      width: 100%;
+      background: var(--pride-gradient);
+    }
+
+    .hub-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(9, 13, 22, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-glass);
+      padding: 0.65rem 1rem;
+    }
+
+    .header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .title-flag-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .title-progress-flag {
+      width: 34px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+      flex-shrink: 0;
+    }
+
+    .game-title-header {
+      margin: 0;
+      font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffffff, #e2e8f0, #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.9rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-decoration: none;
+      border: 1px solid var(--border-glass);
+      background: var(--surface-card);
+      color: var(--text-primary);
+      min-height: 42px;
+      user-select: none;
+      transition: background 0.18s ease, transform 0.15s ease, border-color 0.18s ease;
+    }
+
+    .btn:hover {
+      background: var(--surface-card-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-hub {
+      border-color: rgba(91, 206, 250, 0.35);
+    }
+
+    .btn-hub:hover {
+      border-color: var(--trans-blue);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-quick-exit {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+      border: 1px solid #f87171;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+    }
+
+    .btn-quick-exit:hover {
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
+      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.55);
+    }
+
+    /* ==========================================================================
+       MAIN LAYOUT GRID
+       ========================================================================== */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1rem 1rem 2.5rem;
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    @media (min-width: 900px) {
+      .game-layout {
+        grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.85fr);
+      }
+    }
+
+    /* ==========================================================================
+       ARENA PANEL & CANVAS CONTAINER
+       ========================================================================== */
+    .arena-card {
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      box-shadow: 0 0 28px rgba(168, 85, 247, 0.16);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hud-strip {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .hud-box {
+      background: rgba(9, 13, 22, 0.75);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 0.55rem 0.75rem;
+      text-align: center;
+    }
+
+    .hud-label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .hud-value {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .hud-value.gold {
+      color: var(--pride-yellow);
+    }
+
+    .hud-value.cyan {
+      color: var(--trans-blue);
+    }
+
+    /* Canvas Wrapper */
+    .canvas-stage {
+      position: relative;
+      width: 100%;
+      max-width: 540px;
+      aspect-ratio: 1 / 1;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      background: #070b13;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.75);
+      touch-action: none; /* Prevent scrolling while swiping on canvas */
+    }
+
+    canvas#snakeCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Overlays (Start, Pause, Game Over) */
+    .canvas-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .canvas-overlay.hidden {
+      display: none;
+    }
+
+    .overlay-title {
+      margin: 0 0 0.4rem;
+      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+      font-weight: 800;
+      background: var(--pride-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .overlay-desc {
+      margin: 0 0 1.1rem;
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      max-width: 380px;
+    }
+
+    .btn-play-glow {
+      background: linear-gradient(135deg, #3b82f6, #9333ea);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 800;
+      padding: 0.8rem 1.75rem;
+      border-radius: var(--radius-md);
+      box-shadow: 0 0 22px rgba(168, 85, 247, 0.45);
+    }
+
+    .btn-play-glow:hover {
+      background: linear-gradient(135deg, #2563eb, #7e22ce);
+      box-shadow: 0 0 28px rgba(168, 85, 247, 0.65);
+    }
+
+    /* Game Over Summary Stats & Run Gallery */
+    .gameover-stats {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.9rem;
+    }
+
+    .go-stat {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-sm);
+      padding: 0.45rem 0.85rem;
+      min-width: 90px;
+    }
+
+    .go-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem;
+      max-height: 92px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      padding: 0.4rem;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    /* Live Collection Banner below canvas */
+    .collection-banner {
+      width: 100%;
+      max-width: 540px;
+      margin-top: 0.8rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-glass);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      min-height: 46px;
+    }
+
+    .banner-text {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .banner-pts {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--pride-green);
+      background: rgba(16, 185, 129, 0.16);
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       MOBILE ON-SCREEN D-PAD CONTROLS
+       ========================================================================== */
+    .dpad-wrapper {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(3, 62px);
+      grid-template-rows: repeat(2, 56px);
+      gap: 0.45rem;
+      justify-content: center;
+    }
+
+    @media (min-width: 900px) {
+      .dpad-wrapper {
+        /* Still accessible on desktop if desired, compact sizing */
+        grid-template-columns: repeat(3, 52px);
+        grid-template-rows: repeat(2, 46px);
+      }
+    }
+
+    .dpad-btn {
+      background: var(--surface-card);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 1.35rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .dpad-btn:active {
+      background: rgba(56, 189, 248, 0.3);
+      border-color: var(--trans-blue);
+      transform: scale(0.95);
+    }
+
+    .dpad-up { grid-column: 2; grid-row: 1; }
+    .dpad-left { grid-column: 1; grid-row: 2; }
+    .dpad-down { grid-column: 2; grid-row: 2; }
+    .dpad-right { grid-column: 3; grid-row: 2; }
+
+    /* ==========================================================================
+       SIDEBAR PANEL: OPTIONS, RUN STRIP & UNLOCKED PRIDE CODEX
+       ========================================================================== */
+    .sidebar-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .panel-card {
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem;
+    }
+
+    .panel-heading {
+      margin: 0 0 0.75rem;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--trans-blue);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .control-group {
+      margin-bottom: 0.9rem;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .control-label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .segmented-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
+    }
+
+    .segmented-row.two-col {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .seg-btn {
+      padding: 0.5rem 0.5rem;
+      border-radius: var(--radius-sm);
+      background: rgba(9, 13, 22, 0.75);
+      border: 1px solid var(--border-glass);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 38px;
+      transition: all 0.15s ease;
+    }
+
+    .seg-btn:hover {
+      background: var(--surface-card);
+      color: #ffffff;
+    }
+
+    .seg-btn[aria-pressed="true"] {
+      background: rgba(59, 130, 246, 0.25);
+      border-color: var(--trans-blue);
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.22);
+    }
+
+    /* Flags Collected This Run Strip */
+    .run-flags-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      min-height: 38px;
+      align-items: center;
+    }
+
+    .mini-flag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid var(--border-glass);
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .flag-swatch {
+      width: 18px;
+      height: 12px;
+      border-radius: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      flex-shrink: 0;
+    }
+
+    /* All-Time Unlocked Flag Gallery */
+    .codex-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.45rem;
+    }
+
+    .codex-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.42rem 0.55rem;
+      border-radius: var(--radius-sm);
+      background: rgba(9, 13, 22, 0.65);
+      border: 1px solid var(--border-glass);
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .codex-item.locked {
+      opacity: 0.45;
+      color: var(--text-muted);
+    }
+
+    .hub-footer {
+      text-align: center;
+      padding: 1.25rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border-glass);
+      margin-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Pride Accent Bar -->
+  <div class="pride-top-ribbon" aria-hidden="true"></div>
+
+  <!-- Top Navigation & Privacy Quick Exit -->
+  <header class="hub-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <a href="index.html" class="btn btn-hub" aria-label="Back to LGBTQ Moray Gaming Hub">
+          <span aria-hidden="true">←</span>
+          <span>Back to Gaming Hub</span>
+        </a>
+        <div class="title-flag-wrap">
+          <svg
+            class="title-progress-flag"
+            viewBox="0 0 60 36"
+            role="img"
+            aria-label="Progress Pride Flag"
+          >
+            <!-- 6-Stripe Rainbow Base -->
+            <rect x="0" y="0" width="60" height="6" fill="#E40303" />
+            <rect x="0" y="6" width="60" height="6" fill="#FF8C00" />
+            <rect x="0" y="12" width="60" height="6" fill="#FFED00" />
+            <rect x="0" y="18" width="60" height="6" fill="#008026" />
+            <rect x="0" y="24" width="60" height="6" fill="#24408E" />
+            <rect x="0" y="30" width="60" height="6" fill="#732982" />
+            <!-- Progress Chevron (Black, Brown, Light Blue, Pink, White) -->
+            <polygon points="0,0 28,18 0,36" fill="#000000" />
+            <polygon points="0,0 23,18 0,36" fill="#784F17" />
+            <polygon points="0,0 18,18 0,36" fill="#5BCEFA" />
+            <polygon points="0,0 13,18 0,36" fill="#F5A9B8" />
+            <polygon points="0,0 8,18 0,36" fill="#FFFFFF" />
+          </svg>
+          <h1 class="game-title-header">Pride Flag Snake</h1>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button type="button" id="muteBtn" class="btn" aria-pressed="false" title="Toggle retro arcade sound effects">
+          <span id="muteIcon" aria-hidden="true">🔊</span>
+          <span id="muteText">Sound On</span>
+        </button>
+
+        <button type="button" id="pauseBtn" class="btn" title="Pause or resume game (Spacebar)">
+          <span aria-hidden="true">⏸</span>
+          <span id="pauseText">Pause</span>
+        </button>
+
+        <button
+          type="button"
+          id="quickExitBtn"
+          class="btn btn-quick-exit"
+          aria-label="Quick Exit: Immediately leave this page and open BBC Weather"
+        >
+          <span aria-hidden="true">✕</span>
+          <span>Quick Exit</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="srAnnouncer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="game-layout">
+      <!-- ====================================================================
+           LEFT / MAIN COLUMN: CANVAS ARENA & CONTROLS
+           ==================================================================== -->
+      <section class="arena-card" aria-label="Snake Game Arena">
+        <!-- Live Scoreboard Strip -->
+        <div class="hud-strip">
+          <div class="hud-box">
+            <span class="hud-label">Score</span>
+            <span id="scoreDisplay" class="hud-value">0</span>
+          </div>
+          <div class="hud-box">
+            <span class="hud-label">Flags Eaten</span>
+            <span id="flagsCountDisplay" class="hud-value cyan">0</span>
+          </div>
+          <div class="hud-box">
+            <span class="hud-label">Best Score</span>
+            <span id="bestScoreDisplay" class="hud-value gold">0</span>
+          </div>
+        </div>
+
+        <!-- Responsive Square Canvas Stage -->
+        <div class="canvas-stage" id="canvasStage">
+          <canvas id="snakeCanvas" aria-label="Pride Flag Snake game board"></canvas>
+
+          <!-- Start Overlay -->
+          <div id="startOverlay" class="canvas-overlay">
+            <div style="font-size: 2.4rem; margin-bottom: 0.35rem;" aria-hidden="true">🐍🏳️‍⚧️🏳️‍🌈</div>
+            <h2 class="overlay-title">Pride Flag Snake</h2>
+            <p class="overlay-desc">
+              Guide your snake to collect LGBTQ+ Pride flags. Every flag you collect grows your snake into a vibrant, living Pride tapestry!
+            </p>
+            <button type="button" id="startGameBtn" class="btn btn-play-glow">
+              Start Game
+            </button>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem;">
+              Use Arrow Keys, WASD, Swipe, or the D-Pad below
+            </p>
+          </div>
+
+          <!-- Pause Overlay -->
+          <div id="pauseOverlay" class="canvas-overlay hidden">
+            <h2 class="overlay-title">Game Paused</h2>
+            <p class="overlay-desc">Take a breather! Press Space or click Resume when you're ready.</p>
+            <button type="button" id="resumeGameBtn" class="btn btn-play-glow">
+              Resume Game
+            </button>
+          </div>
+
+          <!-- Game Over Overlay -->
+          <div id="gameOverOverlay" class="canvas-overlay hidden">
+            <h2 class="overlay-title">Run Complete!</h2>
+            <div class="gameover-stats">
+              <div class="go-stat">
+                <span class="hud-label">Final Score</span>
+                <span id="goFinalScore" class="hud-value">0</span>
+              </div>
+              <div class="go-stat">
+                <span class="hud-label">High Score</span>
+                <span id="goHighScore" class="hud-value gold">0</span>
+              </div>
+              <div class="go-stat">
+                <span class="hud-label">Flags</span>
+                <span id="goTotalFlags" class="hud-value cyan">0</span>
+              </div>
+            </div>
+
+            <div style="font-size: 0.76rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 0.25rem;">
+              Unique Flags Collected This Run:
+            </div>
+            <div id="goFlagsGallery" class="go-gallery"></div>
+
+            <button type="button" id="playAgainBtn" class="btn btn-play-glow">
+              Play Again
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Flag Collection Status Banner -->
+        <div class="collection-banner" aria-live="polite">
+          <span id="bannerMessage" class="banner-text">Next target: Collect the Pride flag on the board!</span>
+          <span id="bannerPoints" class="banner-pts">+10 PTS</span>
+        </div>
+
+        <!-- Touch / Click Directional D-Pad -->
+        <div class="dpad-wrapper" role="group" aria-label="Directional Controls">
+          <button type="button" class="dpad-btn dpad-up" data-dir="UP" aria-label="Move Up">▲</button>
+          <button type="button" class="dpad-btn dpad-left" data-dir="LEFT" aria-label="Move Left">◀</button>
+          <button type="button" class="dpad-btn dpad-down" data-dir="DOWN" aria-label="Move Down">▼</button>
+          <button type="button" class="dpad-btn dpad-right" data-dir="RIGHT" aria-label="Move Right">▶</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           RIGHT SIDEBAR: GAME OPTIONS, RUN STRIP & UNLOCKED FLAGS
+           ==================================================================== -->
+      <aside class="sidebar-stack" aria-label="Game Settings and Flag Collection">
+        <!-- Speed & Wall Mode Settings -->
+        <div class="panel-card">
+          <h2 class="panel-heading">
+            <span>⚙️ Play Style</span>
+          </h2>
+
+          <div class="control-group">
+            <span class="control-label">Snake Speed</span>
+            <div class="segmented-row" role="group" aria-label="Snake Speed">
+              <button type="button" class="seg-btn speed-btn" data-speed="chill" aria-pressed="false">Chill</button>
+              <button type="button" class="seg-btn speed-btn" data-speed="standard" aria-pressed="true">Standard</button>
+              <button type="button" class="seg-btn speed-btn" data-speed="fast" aria-pressed="false">Fast</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Arena Boundaries</span>
+            <div class="segmented-row two-col" role="group" aria-label="Arena Boundaries">
+              <button type="button" class="seg-btn wall-btn" data-wrap="true" aria-pressed="true">Portal Wrap</button>
+              <button type="button" class="seg-btn wall-btn" data-wrap="false" aria-pressed="false">Classic Walls</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flags Collected This Run -->
+        <div class="panel-card">
+          <h2 class="panel-heading">
+            <span>🚩 Flags Collected This Run</span>
+            <span id="runUniqueCount" style="color: var(--text-secondary);">0 / 10</span>
+          </h2>
+          <div id="runFlagsStrip" class="run-flags-strip">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Eat flags on the grid to build your Pride trail!</span>
+          </div>
+        </div>
+
+        <!-- Hub Flag Codex (Persistent localStorage) -->
+        <div class="panel-card">
+          <h2 class="panel-heading">
+            <span>🏆 Hub Flag Collection</span>
+            <span id="codexProgressText" style="color: var(--pride-yellow);">0 / 10</span>
+          </h2>
+          <div id="codexGrid" class="codex-grid"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="hub-footer">
+    <strong>LGBTQ Moray Gaming Hub</strong> • Press <kbd>Esc</kbd> twice or click <strong>Quick Exit</strong> anytime to leave immediately.
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       1. LGBTQ+ PRIDE FLAG DEFINITIONS (CUSTOM VECTOR RENDERING SPECS)
+       ========================================================================== */
+    const PRIDE_FLAGS = [
+      {
+        id: "progress",
+        name: "Progress Pride Flag",
+        shortName: "Progress",
+        type: "progress",
+        stripes: ["#E40303", "#FF8C00", "#FFED00", "#008026", "#24408E", "#732982"],
+        bodyColor: "#FF8C00",
+        cssBg: "linear-gradient(180deg, #E40303 0% 16.6%, #FF8C00 16.6% 33.3%, #FFED00 33.3% 50%, #008026 50% 66.6%, #24408E 66.6% 83.3%, #732982 83.3% 100%)"
+      },
+      {
+        id: "rainbow",
+        name: "Rainbow Pride Flag",
+        shortName: "Rainbow",
+        type: "stripes",
+        stripes: ["#E40303", "#FF8C00", "#FFED00", "#008026", "#24408E", "#732982"],
+        bodyColor: "#E40303",
+        cssBg: "linear-gradient(180deg, #E40303 0% 16.6%, #FF8C00 16.6% 33.3%, #FFED00 33.3% 50%, #008026 50% 66.6%, #24408E 66.6% 83.3%, #732982 83.3% 100%)"
+      },
+      {
+        id: "trans",
+        name: "Transgender Pride Flag",
+        shortName: "Trans",
+        type: "stripes",
+        stripes: ["#5BCEFA", "#F5A9B8", "#FFFFFF", "#F5A9B8", "#5BCEFA"],
+        bodyColor: "#5BCEFA",
+        cssBg: "linear-gradient(180deg, #5BCEFA 0% 20%, #F5A9B8 20% 40%, #FFFFFF 40% 60%, #F5A9B8 60% 80%, #5BCEFA 80% 100%)"
+      },
+      {
+        id: "bi",
+        name: "Bisexual Pride Flag",
+        shortName: "Bisexual",
+        type: "bi",
+        stripes: ["#D60270", "#D60270", "#9B4F96", "#0038A8", "#0038A8"],
+        bodyColor: "#D60270",
+        cssBg: "linear-gradient(180deg, #D60270 0% 40%, #9B4F96 40% 60%, #0038A8 60% 100%)"
+      },
+      {
+        id: "pan",
+        name: "Pansexual Pride Flag",
+        shortName: "Pansexual",
+        type: "stripes",
+        stripes: ["#FF218C", "#FFD800", "#21B1FF"],
+        bodyColor: "#FF218C",
+        cssBg: "linear-gradient(180deg, #FF218C 0% 33.3%, #FFD800 33.3% 66.6%, #21B1FF 66.6% 100%)"
+      },
+      {
+        id: "nonbinary",
+        name: "Non-Binary Pride Flag",
+        shortName: "Non-Binary",
+        type: "stripes",
+        stripes: ["#FCF434", "#FFFFFF", "#9C59D1", "#2C2C2C"],
+        bodyColor: "#9C59D1",
+        cssBg: "linear-gradient(180deg, #FCF434 0% 25%, #FFFFFF 25% 50%, #9C59D1 50% 75%, #2C2C2C 75% 100%)"
+      },
+      {
+        id: "lesbian",
+        name: "Lesbian Pride Flag",
+        shortName: "Lesbian",
+        type: "stripes",
+        stripes: ["#D52D00", "#FF9A56", "#FFFFFF", "#D362A4", "#A30262"],
+        bodyColor: "#FF9A56",
+        cssBg: "linear-gradient(180deg, #D52D00 0% 20%, #FF9A56 20% 40%, #FFFFFF 40% 60%, #D362A4 60% 80%, #A30262 80% 100%)"
+      },
+      {
+        id: "asexual",
+        name: "Asexual Pride Flag",
+        shortName: "Asexual",
+        type: "stripes",
+        stripes: ["#111111", "#A3A3A3", "#FFFFFF", "#800080"],
+        bodyColor: "#A855F7",
+        cssBg: "linear-gradient(180deg, #111111 0% 25%, #A3A3A3 25% 50%, #FFFFFF 50% 75%, #800080 75% 100%)"
+      },
+      {
+        id: "intersex",
+        name: "Intersex Pride Flag",
+        shortName: "Intersex",
+        type: "intersex",
+        stripes: ["#FFD800"],
+        bodyColor: "#FFD800",
+        cssBg: "radial-gradient(circle, #FFD800 32%, #7902AA 34% 48%, #FFD800 50%)"
+      },
+      {
+        id: "aromantic",
+        name: "Aromantic Pride Flag",
+        shortName: "Aromantic",
+        type: "stripes",
+        stripes: ["#3DA542", "#A7D379", "#FFFFFF", "#A9A9A9", "#111111"],
+        bodyColor: "#3DA542",
+        cssBg: "linear-gradient(180deg, #3DA542 0% 20%, #A7D379 20% 40%, #FFFFFF 40% 60%, #A9A9A9 60% 80%, #111111 80% 100%)"
+      }
+    ];
+
+    /* ==========================================================================
+       2. STORAGE KEYS & GAME STATE
+       ========================================================================== */
+    const STORAGE_BEST_KEY = "lgbtq_moray_snake_best";
+    const STORAGE_FLAGS_KEY = "lgbtq_moray_snake_flags";
+
+    const SPEED_INTERVALS = {
+      chill: 165,
+      standard: 120,
+      fast: 82
+    };
+
+    const GRID_SIZE = 20; // 20x20 grid
+
+    const state = {
+      status: "START", // 'START' | 'PLAYING' | 'PAUSED' | 'GAMEOVER'
+      speedMode: "standard",
+      wrapWalls: true,
+      muted: false,
+
+      score: 0,
+      bestScore: 0,
+      flagsEatenCount: 0,
+      unlockedFlagIds: new Set(),
+
+      // Snake array: index 0 is head. Each segment stores { x, y, color }
+      snake: [],
+      direction: { x: 1, y: 0 },
+      nextDirection: { x: 1, y: 0 },
+
+      // Active collectible flag on grid
+      currentFood: null, // { x, y, flag }
+      spawnQueue: [],
+
+      // Flags collected during current run
+      runCollectedFlags: [],
+
+      // Timing
+      lastStepTime: 0,
+      animationFrameId: null,
+      pulsePhase: 0
+    };
+
+    /* ==========================================================================
+       3. DOM REFERENCES
+       ========================================================================== */
+    const dom = {
+      srAnnouncer: document.getElementById("srAnnouncer"),
+      quickExitBtn: document.getElementById("quickExitBtn"),
+      muteBtn: document.getElementById("muteBtn"),
+      muteIcon: document.getElementById("muteIcon"),
+      muteText: document.getElementById("muteText"),
+      pauseBtn: document.getElementById("pauseBtn"),
+      pauseText: document.getElementById("pauseText"),
+
+      scoreDisplay: document.getElementById("scoreDisplay"),
+      flagsCountDisplay: document.getElementById("flagsCountDisplay"),
+      bestScoreDisplay: document.getElementById("bestScoreDisplay"),
+
+      canvasStage: document.getElementById("canvasStage"),
+      canvas: document.getElementById("snakeCanvas"),
+
+      startOverlay: document.getElementById("startOverlay"),
+      pauseOverlay: document.getElementById("pauseOverlay"),
+      gameOverOverlay: document.getElementById("gameOverOverlay"),
+
+      startGameBtn: document.getElementById("startGameBtn"),
+      resumeGameBtn: document.getElementById("resumeGameBtn"),
+      playAgainBtn: document.getElementById("playAgainBtn"),
+
+      goFinalScore: document.getElementById("goFinalScore"),
+      goHighScore: document.getElementById("goHighScore"),
+      goTotalFlags: document.getElementById("goTotalFlags"),
+      goFlagsGallery: document.getElementById("goFlagsGallery"),
+
+      bannerMessage: document.getElementById("bannerMessage"),
+      bannerPoints: document.getElementById("bannerPoints"),
+
+      speedBtns: document.querySelectorAll(".speed-btn"),
+      wallBtns: document.querySelectorAll(".wall-btn"),
+      dpadBtns: document.querySelectorAll(".dpad-btn"),
+
+      runUniqueCount: document.getElementById("runUniqueCount"),
+      runFlagsStrip: document.getElementById("runFlagsStrip"),
+      codexProgressText: document.getElementById("codexProgressText"),
+      codexGrid: document.getElementById("codexGrid")
+    };
+
+    const ctx = dom.canvas.getContext("2d");
+
+    /* ==========================================================================
+       4. RETRO WEB AUDIO SYNTHESIZER (NO EXTERNAL ASSETS)
+       ========================================================================== */
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+    }
+
+    function playTone(freq, duration, type = "sine", delay = 0, gainVal = 0.12) {
+      if (state.muted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      try {
+        const now = audioCtx.currentTime + delay;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(gainVal, now + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now);
+        osc.stop(now + duration + 0.02);
+      } catch (e) {
+        // Ignore audio errors gracefully
+      }
+    }
+
+    function playCollectChime(isNewUnlock) {
+      if (isNewUnlock) {
+        // Celebratory major arpeggio for unlocking a new Pride flag
+        playTone(523.25, 0.11, "triangle", 0, 0.14);    // C5
+        playTone(659.25, 0.11, "triangle", 0.07, 0.14); // E5
+        playTone(783.99, 0.11, "triangle", 0.14, 0.14); // G5
+        playTone(1046.5, 0.22, "sine", 0.21, 0.16);     // C6
+      } else {
+        // Crisp retro pickup chime
+        playTone(587.33, 0.09, "triangle", 0, 0.12);    // D5
+        playTone(880.0, 0.16, "triangle", 0.07, 0.13);  // A5
+      }
+    }
+
+    function playGameOverSound() {
+      playTone(330, 0.16, "sawtooth", 0, 0.09);
+      playTone(277.18, 0.16, "sawtooth", 0.14, 0.09);
+      playTone(220, 0.32, "sawtooth", 0.28, 0.09);
+    }
+
+    /* ==========================================================================
+       5. PERSISTENT STORAGE & CODEX RENDERING
+       ========================================================================== */
+    function loadProgress() {
+      try {
+        const savedBest = localStorage.getItem(STORAGE_BEST_KEY);
+        state.bestScore = savedBest ? parseInt(savedBest, 10) || 0 : 0;
+
+        const savedFlags = localStorage.getItem(STORAGE_FLAGS_KEY);
+        if (savedFlags) {
+          const parsed = JSON.parse(savedFlags);
+          if (Array.isArray(parsed)) {
+            state.unlockedFlagIds = new Set(parsed);
+          }
+        }
+      } catch (e) {
+        state.bestScore = 0;
+      }
+      dom.bestScoreDisplay.textContent = state.bestScore.toLocaleString();
+      renderCodex();
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_BEST_KEY, String(state.bestScore));
+        localStorage.setItem(STORAGE_FLAGS_KEY, JSON.stringify([...state.unlockedFlagIds]));
+      } catch (e) {
+        // Ignore storage errors gracefully
+      }
+    }
+
+    function renderCodex() {
+      dom.codexProgressText.textContent = `${state.unlockedFlagIds.size} / ${PRIDE_FLAGS.length}`;
+      dom.codexGrid.innerHTML = "";
+
+      PRIDE_FLAGS.forEach((flag) => {
+        const unlocked = state.unlockedFlagIds.has(flag.id);
+        const item = document.createElement("div");
+        item.className = `codex-item ${unlocked ? "" : "locked"}`;
+        item.innerHTML = `
+          <span class="flag-swatch" style="background: ${unlocked ? flag.cssBg : "#1e293b"};"></span>
+          <span>${unlocked ? flag.shortName : "???"}</span>
+        `;
+        dom.codexGrid.appendChild(item);
+      });
+    }
+
+    function renderRunStrip() {
+      const uniqueIds = [...new Set(state.runCollectedFlags.map((f) => f.id))];
+      dom.runUniqueCount.textContent = `${uniqueIds.length} / ${PRIDE_FLAGS.length}`;
+
+      if (uniqueIds.length === 0) {
+        dom.runFlagsStrip.innerHTML =
+          '<span style="font-size: 0.8rem; color: var(--text-muted);">Eat flags on the grid to build your Pride trail!</span>';
+        return;
+      }
+
+      dom.runFlagsStrip.innerHTML = "";
+      uniqueIds.forEach((id) => {
+        const flag = PRIDE_FLAGS.find((f) => f.id === id);
+        if (!flag) return;
+        const chip = document.createElement("span");
+        chip.className = "mini-flag-chip";
+        chip.innerHTML = `
+          <span class="flag-swatch" style="background: ${flag.cssBg};"></span>
+          <span>${flag.shortName}</span>
+        `;
+        dom.runFlagsStrip.appendChild(chip);
+      });
+    }
+
+    /* ==========================================================================
+       6. SAFETY QUICK EXIT & ACCESSIBILITY ANNOUNCEMENTS
+       ========================================================================== */
+    function triggerQuickExit() {
+      window.location.replace("https://www.bbc.co.uk/weather");
+    }
+
+    dom.quickExitBtn.addEventListener("click", triggerQuickExit);
+
+    let lastEscPress = 0;
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const now = Date.now();
+        if (now - lastEscPress < 800) {
+          triggerQuickExit();
+        }
+        lastEscPress = now;
+      }
+    });
+
+    function announce(msg) {
+      dom.srAnnouncer.textContent = "";
+      requestAnimationFrame(() => {
+        dom.srAnnouncer.textContent = msg;
+      });
+    }
+
+    /* ==========================================================================
+       7. RESPONSIVE CANVAS SIZING
+       ========================================================================== */
+    function resizeCanvas() {
+      const rect = dom.canvasStage.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dom.canvas.width = Math.floor(rect.width * dpr);
+      dom.canvas.height = Math.floor(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawGame();
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    /* ==========================================================================
+       8. CORE SNAKE LOGIC & FLAG SPAWNING
+       ========================================================================== */
+    function getNextFlagFromDeck() {
+      if (state.spawnQueue.length === 0) {
+        // Shuffle all 10 Pride flags so every flag cycles fairly
+        const copy = [...PRIDE_FLAGS];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        state.spawnQueue = copy;
+      }
+      return state.spawnQueue.pop();
+    }
+
+    function spawnFood() {
+      const occupied = new Set(state.snake.map((seg) => `${seg.x},${seg.y}`));
+      const freeCells = [];
+
+      for (let y = 0; y < GRID_SIZE; y++) {
+        for (let x = 0; x < GRID_SIZE; x++) {
+          if (!occupied.has(`${x},${y}`)) {
+            freeCells.push({ x, y });
+          }
+        }
+      }
+
+      if (freeCells.length === 0) {
+        // Player filled the entire board!
+        endGame(true);
+        return;
+      }
+
+      const chosenCell = freeCells[Math.floor(Math.random() * freeCells.length)];
+      const flag = getNextFlagFromDeck();
+
+      state.currentFood = {
+        x: chosenCell.x,
+        y: chosenCell.y,
+        flag
+      };
+
+      dom.bannerMessage.textContent = `Target Flag: ${flag.name}`;
+      dom.bannerPoints.textContent = "+10 PTS";
+    }
+
+    function startNewGame() {
+      initAudio();
+      state.status = "PLAYING";
+      state.score = 0;
+      state.flagsEatenCount = 0;
+      state.runCollectedFlags = [];
+      state.spawnQueue = [];
+
+      // Initial 3-segment snake near center moving right
+      const startX = 8;
+      const startY = 10;
+      state.snake = [
+        { x: startX, y: startY, color: "#38bdf8" },
+        { x: startX - 1, y: startY, color: "#a855f7" },
+        { x: startX - 2, y: startY, color: "#f5a9b8" }
+      ];
+
+      state.direction = { x: 1, y: 0 };
+      state.nextDirection = { x: 1, y: 0 };
+
+      dom.scoreDisplay.textContent = "0";
+      dom.flagsCountDisplay.textContent = "0";
+      dom.pauseText.textContent = "Pause";
+
+      dom.startOverlay.classList.add("hidden");
+      dom.pauseOverlay.classList.add("hidden");
+      dom.gameOverOverlay.classList.add("hidden");
+
+      renderRunStrip();
+      spawnFood();
+      state.lastStepTime = performance.now();
+      announce("Game started. Collect the Pride flags!");
+    }
+
+    function togglePause() {
+      if (state.status === "PLAYING") {
+        state.status = "PAUSED";
+        dom.pauseOverlay.classList.remove("hidden");
+        dom.pauseText.textContent = "Resume";
+        announce("Game paused.");
+      } else if (state.status === "PAUSED") {
+        state.status = "PLAYING";
+        dom.pauseOverlay.classList.add("hidden");
+        dom.pauseText.textContent = "Pause";
+        state.lastStepTime = performance.now();
+        announce("Game resumed.");
+      }
+    }
+
+    function setDirection(dirName) {
+      if (state.status !== "PLAYING") return;
+
+      const { x, y } = state.direction;
+      if (dirName === "UP" && y !== 1) {
+        state.nextDirection = { x: 0, y: -1 };
+      } else if (dirName === "DOWN" && y !== -1) {
+        state.nextDirection = { x: 0, y: 1 };
+      } else if (dirName === "LEFT" && x !== 1) {
+        state.nextDirection = { x: -1, y: 0 };
+      } else if (dirName === "RIGHT" && x !== -1) {
+        state.nextDirection = { x: 1, y: 0 };
+      }
+    }
+
+    function stepSnake() {
+      state.direction = { ...state.nextDirection };
+      const head = state.snake[0];
+      let nextX = head.x + state.direction.x;
+      let nextY = head.y + state.direction.y;
+
+      // Wall handling: Portal Wrap vs Classic Walls
+      if (state.wrapWalls) {
+        nextX = (nextX + GRID_SIZE) % GRID_SIZE;
+        nextY = (nextY + GRID_SIZE) % GRID_SIZE;
+      } else {
+        if (nextX < 0 || nextX >= GRID_SIZE || nextY < 0 || nextY >= GRID_SIZE) {
+          endGame(false);
+          return;
+        }
+      }
+
+      // Check self-collision (ignore tail tip if not growing this turn)
+      const willEat =
+        state.currentFood &&
+        nextX === state.currentFood.x &&
+        nextY === state.currentFood.y;
+
+      const bodyCheckLimit = willEat ? state.snake.length : state.snake.length - 1;
+      for (let i = 0; i < bodyCheckLimit; i++) {
+        if (state.snake[i].x === nextX && state.snake[i].y === nextY) {
+          endGame(false);
+          return;
+        }
+      }
+
+      // Preserve existing segment colors along the body tapestry
+      const existingColors = state.snake.map((s) => s.color);
+
+      if (willEat) {
+        const eatenFlag = state.currentFood.flag;
+        // Head takes the newly collected flag's signature color, shifting prior colors down the tail!
+        const updatedColors = [eatenFlag.bodyColor, ...existingColors];
+        const newPositions = [{ x: nextX, y: nextY }, ...state.snake.map((s) => ({ x: s.x, y: s.y }))];
+
+        state.snake = newPositions.map((pos, idx) => ({
+          x: pos.x,
+          y: pos.y,
+          color: updatedColors[idx] || eatenFlag.bodyColor
+        }));
+
+        handleFlagCollected(eatenFlag);
+      } else {
+        // Move forward without growing, keeping color sequence intact
+        const newPositions = [
+          { x: nextX, y: nextY },
+          ...state.snake.slice(0, state.snake.length - 1).map((s) => ({ x: s.x, y: s.y }))
+        ];
+
+        state.snake = newPositions.map((pos, idx) => ({
+          x: pos.x,
+          y: pos.y,
+          color: existingColors[idx]
+        }));
+      }
+    }
+
+    function handleFlagCollected(flag) {
+      const wasNewUnlock = !state.unlockedFlagIds.has(flag.id);
+      const speedBonus = state.speedMode === "fast" ? 5 : state.speedMode === "standard" ? 0 : 0;
+      const pointsEarned = 10 + speedBonus + (wasNewUnlock ? 15 : 0);
+
+      state.score += pointsEarned;
+      state.flagsEatenCount += 1;
+      state.runCollectedFlags.push(flag);
+      state.unlockedFlagIds.add(flag.id);
+
+      if (state.score > state.bestScore) {
+        state.bestScore = state.score;
+        dom.bestScoreDisplay.textContent = state.bestScore.toLocaleString();
+      }
+
+      dom.scoreDisplay.textContent = state.score.toLocaleString();
+      dom.flagsCountDisplay.textContent = state.flagsEatenCount.toString();
+
+      saveProgress();
+      renderRunStrip();
+      renderCodex();
+      playCollectChime(wasNewUnlock);
+
+      // Spawn next flag first, then show celebratory status message briefly
+      spawnFood();
+      dom.bannerMessage.textContent = wasNewUnlock
+        ? `NEW UNLOCK: ${flag.name}!`
+        : `Collected: ${flag.name}!`;
+      dom.bannerPoints.textContent = `+${pointsEarned} PTS`;
+
+      announce(`Collected ${flag.name}. Score ${state.score}.`);
+    }
+
+    function endGame(boardCleared) {
+      state.status = "GAMEOVER";
+      playGameOverSound();
+      saveProgress();
+
+      dom.goFinalScore.textContent = state.score.toLocaleString();
+      dom.goHighScore.textContent = state.bestScore.toLocaleString();
+      dom.goTotalFlags.textContent = state.flagsEatenCount.toString();
+
+      // Populate unique flags gallery on Game Over screen
+      dom.goFlagsGallery.innerHTML = "";
+      const uniqueIds = [...new Set(state.runCollectedFlags.map((f) => f.id))];
+      if (uniqueIds.length === 0) {
+        dom.goFlagsGallery.innerHTML =
+          '<span style="font-size:0.8rem; color:var(--text-muted);">No flags collected this run—try again!</span>';
+      } else {
+        uniqueIds.forEach((id) => {
+          const flag = PRIDE_FLAGS.find((f) => f.id === id);
+          if (!flag) return;
+          const badge = document.createElement("span");
+          badge.className = "mini-flag-chip";
+          badge.innerHTML = `
+            <span class="flag-swatch" style="background: ${flag.cssBg};"></span>
+            <span>${flag.shortName}</span>
+          `;
+          dom.goFlagsGallery.appendChild(badge);
+        });
+      }
+
+      dom.gameOverOverlay.classList.remove("hidden");
+      announce(
+        boardCleared
+          ? `Incredible! You cleared the entire board with a score of ${state.score}!`
+          : `Game over. Final score ${state.score}.`
+      );
+      dom.playAgainBtn.focus();
+    }
+
+    /* ==========================================================================
+       9. CUSTOM VECTOR FLAG & SNAKE CANVAS RENDERING
+       ========================================================================== */
+    function drawPrideFlagOnCanvas(flag, x, y, w, h) {
+      ctx.save();
+
+      // Rounded flag clipping mask
+      const r = Math.min(4, w * 0.16);
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      ctx.clip();
+
+      if (flag.type === "intersex") {
+        // Yellow background with centered purple ring
+        ctx.fillStyle = "#FFD800";
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = "#7902AA";
+        ctx.lineWidth = Math.max(2, h * 0.14);
+        ctx.beginPath();
+        ctx.arc(x + w / 2, y + h / 2, h * 0.27, 0, Math.PI * 2);
+        ctx.stroke();
+      } else {
+        // Horizontal stripes
+        const stripeH = h / flag.stripes.length;
+        flag.stripes.forEach((col, i) => {
+          ctx.fillStyle = col;
+          ctx.fillRect(x, y + i * stripeH, w, stripeH + 0.6);
+        });
+
+        // Progress Pride Chevron overlay
+        if (flag.type === "progress") {
+          const chevrons = [
+            { color: "#000000", tip: 0.46 },
+            { color: "#784F17", tip: 0.38 },
+            { color: "#5BCEFA", tip: 0.30 },
+            { color: "#F5A9B8", tip: 0.22 },
+            { color: "#FFFFFF", tip: 0.14 }
+          ];
+          chevrons.forEach((ch) => {
+            ctx.fillStyle = ch.color;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + w * ch.tip, y + h / 2);
+            ctx.lineTo(x, y + h);
+            ctx.closePath();
+            ctx.fill();
+          });
+        }
+      }
+
+      ctx.restore();
+
+      // Crisp flag border & mini flagpole highlight
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+      ctx.lineWidth = 1.2;
+      ctx.strokeRect(x, y, w, h);
+    }
+
+    function drawGame() {
+      const rect = dom.canvasStage.getBoundingClientRect();
+      const size = rect.width;
+      if (!size) return;
+
+      const cell = size / GRID_SIZE;
+
+      // 1. Background fill
+      ctx.fillStyle = "#070b13";
+      ctx.fillRect(0, 0, size, size);
+
+      // 2. Subtle grid lines
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.08)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < GRID_SIZE; i++) {
+        const pos = i * cell;
+        ctx.beginPath();
+        ctx.moveTo(pos, 0);
+        ctx.lineTo(pos, size);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, pos);
+        ctx.lineTo(size, pos);
+        ctx.stroke();
+      }
+
+      // 3. Border indicator (Dashed Cyan for Portal Wrap, Solid Red/Pink for Classic Walls)
+      ctx.save();
+      if (state.wrapWalls) {
+        ctx.strokeStyle = "rgba(91, 206, 250, 0.35)";
+        ctx.setLineDash([6, 6]);
+        ctx.lineWidth = 2;
+      } else {
+        ctx.strokeStyle = "rgba(244, 63, 94, 0.65)";
+        ctx.lineWidth = 3;
+      }
+      ctx.strokeRect(1, 1, size - 2, size - 2);
+      ctx.restore();
+
+      // 4. Draw Collectible Pride Flag
+      if (state.currentFood) {
+        const { x, y, flag } = state.currentFood;
+        const pulse = Math.sin(state.pulsePhase) * 1.5;
+        const flagW = cell * 0.86 + pulse;
+        const flagH = cell * 0.62 + pulse * 0.7;
+        const fx = x * cell + (cell - flagW) / 2;
+        const fy = y * cell + (cell - flagH) / 2;
+
+        // Soft ambient glow behind flag
+        ctx.save();
+        ctx.shadowColor = flag.bodyColor;
+        ctx.shadowBlur = 12;
+        drawPrideFlagOnCanvas(flag, fx, fy, flagW, flagH);
+        ctx.restore();
+      }
+
+      // 5. Draw Snake Segments (Tail to Head so Head overlaps cleanly)
+      for (let i = state.snake.length - 1; i >= 0; i--) {
+        const seg = state.snake[i];
+        const isHead = i === 0;
+        const pad = isHead ? cell * 0.06 : cell * 0.1;
+        const segSize = cell - pad * 2;
+        const sx = seg.x * cell + pad;
+        const sy = seg.y * cell + pad;
+        const radius = isHead ? cell * 0.28 : cell * 0.22;
+
+        ctx.save();
+        ctx.fillStyle = seg.color;
+        if (isHead) {
+          ctx.shadowColor = seg.color;
+          ctx.shadowBlur = 10;
+        }
+
+        // Rounded rectangle segment
+        ctx.beginPath();
+        ctx.roundRect(sx, sy, segSize, segSize, radius);
+        ctx.fill();
+
+        // Subtle inner highlight for depth
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Draw expressive eyes on the snake's head
+        if (isHead) {
+          const cx = seg.x * cell + cell / 2;
+          const cy = seg.y * cell + cell / 2;
+          const eyeOffset = cell * 0.18;
+          const forwardShift = cell * 0.14;
+          const eyeRadius = Math.max(2, cell * 0.09);
+
+          let eye1 = { x: cx, y: cy };
+          let eye2 = { x: cx, y: cy };
+
+          if (state.direction.x === 1) {
+            eye1 = { x: cx + forwardShift, y: cy - eyeOffset };
+            eye2 = { x: cx + forwardShift, y: cy + eyeOffset };
+          } else if (state.direction.x === -1) {
+            eye1 = { x: cx - forwardShift, y: cy - eyeOffset };
+            eye2 = { x: cx - forwardShift, y: cy + eyeOffset };
+          } else if (state.direction.y === -1) {
+            eye1 = { x: cx - eyeOffset, y: cy - forwardShift };
+            eye2 = { x: cx + eyeOffset, y: cy - forwardShift };
+          } else {
+            eye1 = { x: cx - eyeOffset, y: cy + forwardShift };
+            eye2 = { x: cx + eyeOffset, y: cy + forwardShift };
+          }
+
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(eye1.x, eye1.y, eyeRadius, 0, Math.PI * 2);
+          ctx.arc(eye2.x, eye2.y, eyeRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#090d16";
+          ctx.beginPath();
+          ctx.arc(eye1.x, eye1.y, eyeRadius * 0.55, 0, Math.PI * 2);
+          ctx.arc(eye2.x, eye2.y, eyeRadius * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    /* ==========================================================================
+       10. MAIN ANIMATION & FIXED-TIMESTEP GAME LOOP
+       ========================================================================== */
+    function gameLoop(timestamp) {
+      state.pulsePhase += 0.08;
+
+      if (state.status === "PLAYING") {
+        const interval = SPEED_INTERVALS[state.speedMode] || 120;
+        if (timestamp - state.lastStepTime >= interval) {
+          stepSnake();
+          state.lastStepTime = timestamp;
+        }
+      }
+
+      drawGame();
+      state.animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    /* ==========================================================================
+       11. INPUT LISTENERS (KEYBOARD, SWIPE GESTURES, D-PAD & SETTINGS)
+       ========================================================================== */
+    document.addEventListener("keydown", (e) => {
+      const key = e.key.toLowerCase();
+
+      if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(key)) {
+        e.preventDefault();
+      }
+
+      if (key === "arrowup" || key === "w") setDirection("UP");
+      else if (key === "arrowdown" || key === "s") setDirection("DOWN");
+      else if (key === "arrowleft" || key === "a") setDirection("LEFT");
+      else if (key === "arrowright" || key === "d") setDirection("RIGHT");
+      else if (key === " ") {
+        if (state.status === "PLAYING" || state.status === "PAUSED") {
+          togglePause();
+        } else if (state.status === "START" || state.status === "GAMEOVER") {
+          startNewGame();
+        }
+      }
+    });
+
+    // Touch Swipe Gestures on Canvas Stage
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    dom.canvasStage.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.touches.length > 0) {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        }
+      },
+      { passive: true }
+    );
+
+    dom.canvasStage.addEventListener(
+      "touchend",
+      (e) => {
+        if (e.changedTouches.length === 0) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+
+        if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return; // Ignore accidental taps
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          setDirection(dx > 0 ? "RIGHT" : "LEFT");
+        } else {
+          setDirection(dy > 0 ? "DOWN" : "UP");
+        }
+      },
+      { passive: true }
+    );
+
+    // On-screen D-Pad Buttons
+    dom.dpadBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setDirection(btn.dataset.dir);
+      });
+    });
+
+    // Start / Resume / Play Again / Pause Buttons
+    dom.startGameBtn.addEventListener("click", startNewGame);
+    dom.resumeGameBtn.addEventListener("click", togglePause);
+    dom.playAgainBtn.addEventListener("click", startNewGame);
+    dom.pauseBtn.addEventListener("click", togglePause);
+
+    // Audio Mute Toggle
+    dom.muteBtn.addEventListener("click", () => {
+      state.muted = !state.muted;
+      dom.muteBtn.setAttribute("aria-pressed", String(state.muted));
+      dom.muteIcon.textContent = state.muted ? "🔇" : "🔊";
+      dom.muteText.textContent = state.muted ? "Muted" : "Sound On";
+    });
+
+    // Speed Mode Selector
+    dom.speedBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        dom.speedBtns.forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+        state.speedMode = btn.dataset.speed;
+        announce(`Speed set to ${btn.textContent}.`);
+      });
+    });
+
+    // Boundary Mode Selector
+    dom.wallBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        dom.wallBtns.forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+        state.wrapWalls = btn.dataset.wrap === "true";
+        drawGame();
+        announce(`Arena boundaries set to ${btn.textContent}.`);
+      });
+    });
+
+    /* ==========================================================================
+       12. INITIALIZATION ON WINDOW LOAD
+       ========================================================================== */
+    window.addEventListener("load", () => {
+      loadProgress();
+      // Seed preview snake on canvas behind Start Overlay
+      state.snake = [
+        { x: 11, y: 10, color: "#5BCEFA" },
+        { x: 10, y: 10, color: "#F5A9B8" },
+        { x: 9, y: 10, color: "#FFFFFF" },
+        { x: 8, y: 10, color: "#A855F7" },
+        { x: 7, y: 10, color: "#FF8C00" }
+      ];
+      spawnFood();
+      resizeCanvas();
+      state.animationFrameId = requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>
